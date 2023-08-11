@@ -1,0 +1,378 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 60vh;
+  /* padding: 1rem; */
+}
+
+.header {
+  width: auto;
+}
+
+.header p {
+  text-align: center;
+}
+
+.textarea111 {
+  position: relative;
+  resize: none;
+  font-size: 1.1rem;
+  /* padding: 1rem 2rem 1rem 2rem; */
+  padding: 0.5rem 3rem 1rem 1rem;
+  /* width: 75vw; */
+  border-radius: 0.5rem;
+  border: 1px solid #d9d9e3;
+  background: #ffffff;
+  color: #000;
+  outline: none;
+}
+
+.textarea:disabled {
+  opacity: 0.5;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #6b7280;
+  box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.5);
+}
+
+.textarea::placeholder {
+  color: #6b7280;
+}
+
+.generatebutton {
+  position: absolute;
+  /* top: 0.87rem; */
+  right: 1rem;
+  color: rgb(165, 162, 162);
+  background: none;
+  padding: 0.3rem;
+  border: none;
+  display: flex;
+}
+
+.loadingwheel {
+  /* position: absolute; */
+  /* top: 0.2rem; */
+  right: 0.25rem;
+}
+
+.svgicon {
+  transform: rotate(90deg);
+  width: 1.2em;
+  height: 1.2em;
+  fill: currentColor;
+}
+
+.generatebutton:hover {
+  background: #e4575726;
+  border-radius: 0.2rem;
+}
+
+.generatebutton:disabled {
+  opacity: 0.9;
+  cursor: not-allowed;
+  background: none;
+}
+
+.messagelist {
+  width: 100%;
+  height: 50vh;
+  overflow-y: scroll;
+  padding: 10px;
+  /* border-radius: 0.5rem; */
+}
+
+.messagelistloading {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.usermessage {
+  padding: 0.8rem;
+  color: #ffffff;
+  border-radius: 19px 19px 0px 19px;
+  background: #17c3ce;
+  float: right;
+  max-width: 90%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.usermessagewaiting {
+  padding: 0.8rem;
+  color: #ffffff;
+  border-radius: 19px 19px 0px 19px;
+  background: linear-gradient(to left, #17c3ce, #1ce6f5, #14c4d0);
+  background-size: 200% 200%;
+  background-position: -100% 0;
+  animation: loading-gradient 2s ease-in-out infinite;
+  animation-direction: alternate;
+  animation-name: loading-gradient;
+  float: right;
+  max-width: 90%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.typingdiv {
+  background: #e8e8e8;
+  width: calc(100% - 85px);
+  height: 54px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-right: 10px;
+  margin-left: 10px;
+  border-radius: 17px;
+  box-shadow: 3.766153573989868px 3.766153573989868px 7.532307147979736px 0px
+    rgba(121, 109, 109, 0.25);
+}
+
+.typingform {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.typingbox {
+  width: 100%;
+  height: 44px;
+  background: #e8e8e8;
+  resize: none;
+  color: black;
+  box-sizing: border-box;
+  padding: 10px 13px;
+  outline: none;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  border-radius: 17px;
+}
+
+.typingbox::placeholder {
+  color: var(--textcolor, #9e9e9e);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.btnsend {
+  position: absolute;
+  right: 10px;
+  bottom: 0px;
+  width: 54px;
+  height: 54px;
+  display: inline-flex;
+  padding: 8.429px;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  flex-shrink: 0;
+  border-radius: 70.238px;
+  background: #17c3ce;
+  box-shadow: 3px 3px 12px 0px rgba(17, 144, 153, 0.35);
+}
+
+.chatheader {
+  background-color: #14c4d0;
+  color: white;
+  padding: 10px;
+  box-shadow: 3px 3px 12px 0px rgba(17, 144, 153, 0.35);
+}
+
+.loadingdiv {
+  display: flex;
+  justify-content: center;
+  width: 210px;
+  height: 55px;
+  border-radius: 9px;
+  border: 1px solid #e4e4e4;
+  align-items: center;
+  margin: auto;
+  margin-bottom: 10px;
+  background-color: #14c4d0;
+  background: linear-gradient(to left, #17c3ce, #1ce6f5, #14c4d0);
+  background-size: 200% 200%;
+  background-position: -100% 0;
+  animation: loading-gradient 2s ease-in-out infinite;
+  animation-direction: alternate;
+  animation-name: loading-gradient;
+}
+
+.loadingtext {
+  color: #fff;
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 111.111% */
+}
+
+@keyframes loading-gradient {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 100% 0;
+  }
+}
+
+.apimessage {
+  padding: 0.8rem;
+  color: #000;
+  animation: fadein 0.5s;
+  border-radius: 19px 19px 19px 0px;
+  background: #f5f5f5;
+  float: left;
+  max-width: 90%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.apimessage,
+.usermessage,
+.usermessagewaiting {
+  display: flex;
+}
+
+.markdownanswer {
+  line-height: 1.75;
+  word-break: break-word;
+}
+
+.markdownanswer a:hover {
+  opacity: 0.8;
+}
+
+.markdownanswer a {
+  color: #b13a3a;
+  font-weight: 500;
+}
+
+.markdownanswer code {
+  color: #15cb19;
+  font-weight: 500;
+  white-space: pre-wrap !important;
+}
+
+.markdownanswer ol,
+.markdownanswer ul {
+  margin: 1rem;
+}
+
+.boticon,
+.usericon {
+  margin-right: 1rem;
+  border-radius: 0.1rem;
+  height: 100%;
+}
+
+.markdownanswer h1,
+.markdownanswer h2,
+.markdownanswer h3 {
+  font-size: inherit;
+}
+
+.closebox {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  padding: 1rem 0;
+  flex-direction: column;
+  bottom: 0;
+  width: 100%;
+}
+
+.cloud {
+  /* width: 75vw; */
+  height: 50vh;
+  min-height: 250px;
+  background: #ffffff;
+  border-radius: 0.5rem;
+  border: 1px solid #d9d9e3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pointsnormal {
+  width: 90%;
+  height: 90%;
+}
+
+.pointsdim {
+  width: 90%;
+  height: 90%;
+  opacity: 0.25;
+}
+
+.footer {
+  color: #5f6368;
+  font-size: 0.8rem;
+  margin: 1.5rem;
+}
+
+.footer a {
+  font-weight: 500;
+  color: #7a7d81;
+}
+
+.footer a:hover {
+  opacity: 0.8;
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+  .main {
+    /* padding: 1rem; */
+    max-height: 90vh;
+  }
+
+  .cloud {
+    /* width: 22rem; */
+    height: 27rem;
+  }
+  .textarea {
+    /* width: 22rem; */
+  }
+  .topnav {
+    border: 1px solid black;
+    align-items: center;
+    padding: 0.85rem 0.75rem 0.85rem 0.75rem;
+  }
+
+  .navlogo {
+    font-size: 1.25rem;
+    width: 20rem;
+  }
+
+  .markdownanswer code {
+    white-space: pre-wrap !important;
+  }
+
+  .footer {
+    font-size: 0.7rem;
+    width: 100%;
+    text-align: center;
+  }
+}

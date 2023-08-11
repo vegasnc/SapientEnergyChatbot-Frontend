@@ -1,0 +1,179 @@
+{
+    "a000!%5358959": {
+        "address": "177A Bleecker Street",
+        "streetName": "Bleecker Street",
+        "streetNumber": "177",
+        "streetDirection": "N",
+        "unitNumber": "A",
+        "cityName": "Greenwich Village",
+        "countyName": "New York",
+        "state": "NY",
+        "zipcode": "10012",
+        "listingPrice": "$616,000,000",
+        "listingID": "5358959",
+        "remarksConcat": "Home to Dr. Stephen Vincent Strange(Doctor Strange in Marvel comics) and his faithful bodyguard and manservant Wong. Spider-Man often visits the Doctor for help when battling those with magic powers. Features: Wong's Storage Cellar, Strange's bedchambers, guest quarters, Wong's bedchamber, Study, Meditain Chamber, Library, Storage Area for Occult Artifacts.",
+        "rntLse": "neither",
+        "propStatus": "Active",
+        "bedrooms": "2",
+        "totalBaths": "2.75",
+        "latitude": "40.729117",
+        "longitude": "-74.000773",
+        "acres": "0.31",
+        "sqFt": "206800000000",
+        "displayAddress": "y",
+        "listingAgentID": "8675301",
+        "listingOfficeID": "lmnop",
+        "sample_mlsPtID": "1",
+        "sample_mlsPhotoCount": "34",
+        "parentPtID": "1",
+        "detailsURL": "a000/5358959",
+        "idxID": "a000",
+        "idxPropType": "Residential",
+        "idxStatus": "active",
+        "viewCount": "6",
+        "mediaData": [],
+        "ohCount": "0",
+        "vtCount": "0",
+        "featured": "y",
+        "image": {
+            "0": {
+                "url": "http://cdn.photos.sample_mls.com/az/20151105214013253867000000.jpg",
+                "caption": "Front"
+            },
+            "1": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214021558371000000-o.jpg",
+                "caption": "Kitchen"
+            },
+            "2": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214030458632000000-o.jpg",
+                "caption": "Kitchen"
+            },
+            "3": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214037427673000000-o.jpg",
+                "caption": "Kitchen island"
+            },
+            "4": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214046268237000000-o.jpg",
+                "caption": "Gas stove"
+            },
+            "5": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214050798343000000-o.jpg",
+                "caption": "Dry bar"
+            },
+            "6": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214103418755000000-o.jpg",
+                "caption": "image"
+            },
+            "7": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214452409969000000-o.jpg",
+                "caption": "IMG_2171"
+            },
+            "8": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214525763382000000-o.jpg",
+                "caption": "IMG_2172"
+            },
+            "9": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214550437184000000-o.jpg",
+                "caption": "IMG_2173"
+            },
+            "10": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214609026856000000-o.jpg",
+                "caption": "IMG_2174"
+            },
+            "11": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214636764202000000-o.jpg",
+                "caption": "IMG_2175"
+            },
+            "12": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214712324044000000-o.jpg",
+                "caption": "IMG_2176"
+            },
+            "13": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214755697364000000-o.jpg",
+                "caption": "IMG_2178"
+            },
+            "14": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214938527658000000-o.jpg",
+                "caption": "IMG_2191"
+            },
+            "15": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105214959201280000000-o.jpg",
+                "caption": "IMG_2192"
+            },
+            "16": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105215034660606000000-o.jpg",
+                "caption": "IMG_2194"
+            },
+            "17": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151105215119309905000000-o.jpg",
+                "caption": "IMG_2195"
+            },
+            "18": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025022448381000000-o.jpg",
+                "caption": "IMG_2196"
+            },
+            "19": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025128972728000000-o.jpg",
+                "caption": "IMG_2198"
+            },
+            "20": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025332463298000000-o.jpg",
+                "caption": "IMG_2201"
+            },
+            "21": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025412283493000000-o.jpg",
+                "caption": "IMG_2203"
+            },
+            "22": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025439939347000000-o.jpg",
+                "caption": "IMG_2204"
+            },
+            "23": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025500776761000000-o.jpg",
+                "caption": "IMG_2205"
+            },
+            "24": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025534248471000000-o.jpg",
+                "caption": "IMG_2206"
+            },
+            "25": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025612220919000000-o.jpg",
+                "caption": "IMG_2207"
+            },
+            "26": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025646943469000000-o.jpg",
+                "caption": "IMG_2210"
+            },
+            "27": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025718580455000000-o.jpg",
+                "caption": "IMG_2213"
+            },
+            "28": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025753776863000000-o.jpg",
+                "caption": "IMG_2211"
+            },
+            "29": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025859743193000000-o.jpg",
+                "caption": "IMG_2221"
+            },
+            "30": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106025939891007000000-o.jpg",
+                "caption": "IMG_2222"
+            },
+            "31": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106030022313598000000-o.jpg",
+                "caption": "IMG_2224"
+            },
+            "32": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106030059492411000000-o.jpg",
+                "caption": "IMG_2216"
+            },
+            "33": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151106030128341870000000-o.jpg",
+                "caption": "IMG_2227"
+            },
+            "totalCount": "34"
+        },
+        "fullDetailsURL": "http://sample_return.idxbroker.com/idx/details/listing/a000/5358959/177A-Bleecker-Street-Greenwich-Village-NY-10012"
+    }
+}

@@ -1,0 +1,199 @@
+{
+    "a000!%5362657": {
+        "address": "20 Ingram Street",
+        "streetName": "Ingram Street",
+        "streetNumber": "20",
+        "streetDirection": "N",
+        "unitNumber": "",
+        "cityName": "Forest Hills",
+        "countyName": "New York",
+        "state": "NY",
+        "zipcode": "11375",
+        "listingPrice": "$1,151,000",
+        "listingID": "5362657",
+        "remarksConcat": "From nytimes.com: In the comics, Peter Parker, the mild-mannered photojournalist who is Spider-Man's alter ego, grew up at 20 Ingram Street, a modest, two-story boarding house run by his Aunt May in the heart of Forest Hills Gardens. The address actually exists and is home to a family named Parker: Andrew and Suzanne Parker, who moved there in 1974, and their two daughters. In 1989, the family began receiving junk mail addressed to Peter Parker. We got tons of it, Mrs. Parker said yesterday. Star Trek magazines, a Discover Card in his name, and notices from them over the years calling him a good customer. There were also prank phone calls, all of which she attributed to a teenager who found it funny that we had the same last name as Spider-Man.",
+        "rntLse": "neither",
+        "propStatus": "Active",
+        "bedrooms": "3",
+        "totalBaths": "2.75",
+        "latitude": "40.712968",
+        "longitude": "-73.843206",
+        "acres": "0.24",
+        "sqFt": "2,760",
+        "displayAddress": "y",
+        "listingAgentID": "8675301",
+        "listingOfficeID": "lmnop",
+        "sample_mlsPtID": "1",
+        "sample_mlsPhotoCount": "39",
+        "parentPtID": "1",
+        "detailsURL": "a000/5362657",
+        "idxID": "a000",
+        "idxPropType": "Residential",
+        "idxStatus": "active",
+        "viewCount": "2",
+        "mediaData": [],
+        "ohCount": "0",
+        "vtCount": "0",
+        "featured": "y",
+        "image": {
+            "0": {
+                "url": "http://cdn.photos.ample_mls.com/az/20151113223546806109000000.jpg",
+                "caption": "17596-20"
+            },
+            "1": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223606715515000000-o.jpg",
+                "caption": "17596-19"
+            },
+            "2": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224827327218000000-o.jpg",
+                "caption": "IMG_0623_3"
+            },
+            "3": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224924297227000000-o.jpg",
+                "caption": "IMG_0627_1"
+            },
+            "4": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113225039982988000000-o.jpg",
+                "caption": "IMG_0637"
+            },
+            "5": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224759886429000000-o.jpg",
+                "caption": "IMG_0614_1"
+            },
+            "6": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223833522714000000-o.jpg",
+                "caption": "17596-6"
+            },
+            "7": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224250904573000000-o.jpg",
+                "caption": "IMG_0586_1"
+            },
+            "8": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223818226389000000-o.jpg",
+                "caption": "17596-7"
+            },
+            "9": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223755328181000000-o.jpg",
+                "caption": "17596-8"
+            },
+            "10": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223848391354000000-o.jpg",
+                "caption": "17596-5"
+            },
+            "11": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223903060475000000-o.jpg",
+                "caption": "17596-4"
+            },
+            "12": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223931976756000000-o.jpg",
+                "caption": "17596-2"
+            },
+            "13": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224136459602000000-o.jpg",
+                "caption": "IMG_0580_1"
+            },
+            "14": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224114616405000000-o.jpg",
+                "caption": "IMG_0576"
+            },
+            "15": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223918237202000000-o.jpg",
+                "caption": "17596-3"
+            },
+            "16": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224221698585000000-o.jpg",
+                "caption": "IMG_0582_2"
+            },
+            "17": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224203923805000000-o.jpg",
+                "caption": "IMG_0581"
+            },
+            "18": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223947240820000000-o.jpg",
+                "caption": "17596-1"
+            },
+            "19": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223657610545000000-o.jpg",
+                "caption": "17596-12"
+            },
+            "20": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224727952795000000-o.jpg",
+                "caption": "IMG_0612"
+            },
+            "21": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224705167040000000-o.jpg",
+                "caption": "IMG_0611_1"
+            },
+            "22": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223711167057000000-o.jpg",
+                "caption": "17596-11"
+            },
+            "23": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224427658886000000-o.jpg",
+                "caption": "IMG_0601_1"
+            },
+            "24": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224446775000000000-o.jpg",
+                "caption": "IMG_0602"
+            },
+            "25": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224558611268000000-o.jpg",
+                "caption": "IMG_0608_1"
+            },
+            "26": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224402893763000000-o.jpg",
+                "caption": "IMG_0601_1"
+            },
+            "27": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224621292978000000-o.jpg",
+                "caption": "IMG_0609_1"
+            },
+            "28": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224526966571000000-o.jpg",
+                "caption": "IMG_0603"
+            },
+            "29": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223722369367000000-o.jpg",
+                "caption": "17596-10"
+            },
+            "30": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223735217885000000-o.jpg",
+                "caption": "17596-9"
+            },
+            "31": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223624239696000000-o.jpg",
+                "caption": "17596-14"
+            },
+            "32": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113223637503030000000-o.jpg",
+                "caption": "17596-13"
+            },
+            "33": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224316220433000000-o.jpg",
+                "caption": "IMG_0594"
+            },
+            "34": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224338513947000000-o.jpg",
+                "caption": "IMG_0598_1"
+            },
+            "35": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224852651524000000-o.jpg",
+                "caption": "IMG_0638_1"
+            },
+            "36": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113224951759077000000-o.jpg",
+                "caption": "IMG_0636_1"
+            },
+            "37": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151113225012814310000000-o.jpg",
+                "caption": "IMG_0631"
+            },
+            "38": {
+                "url": "http://cdn.sample_mls.com/az/1024x768/true/20151114021243324962000000-o.jpg",
+                "caption": "image"
+            },
+            "totalCount": "39"
+        },
+        "fullDetailsURL": "http://sample_return.idxbroker.com/idx/details/listing/a000/5362657/20-Ingram-Street-Forrest-Hills-NY-11375"
+    }
+}

@@ -1,0 +1,44 @@
+
+.modaloverlay {
+    z-index: 9999;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalbox {
+    display: block;
+    background: white;
+    width: 70%;
+    height: 65%;
+    padding: 1rem;
+    border-radius: 1rem;
+    position: relative;
+}
+
+.modalclose {
+    position: absolute;
+    right: 0;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 9999;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    line-height: 1.5rem;
+    padding: 0.5rem 1rem;
+    text-align: right;
+    vertical-align: middle;
+}
+
+@media screen and (min-width: 680px) {
+    .modalbox {
+        width: 50%;
+    }
+  }
