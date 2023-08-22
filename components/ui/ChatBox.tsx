@@ -50,7 +50,7 @@ export default function ChatBox(props: PropsType) {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
     const backendAPI = axios.create({
-        baseURL: "http://localhost:5000"
+        baseURL: "http://54.64.117.176"
       });
     backendAPI.defaults.headers.common['Content-Type'] = 'application/json';
 
