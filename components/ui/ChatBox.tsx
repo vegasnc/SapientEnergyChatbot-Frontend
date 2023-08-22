@@ -53,6 +53,7 @@ export default function ChatBox(props: PropsType) {
         baseURL: "http://54.64.117.176"
       });
     backendAPI.defaults.headers.common['Content-Type'] = 'application/json';
+    backendAPI.defaults.headers.common['User-Agent'] = 'XY';
 
     useEffect(() => {
         textAreaRef.current?.focus();
