@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import Layout from '@/components/layout';
-import styles from '@/styles/index.module.css';
+import styles from '@/styles/Home.module.css';
 
 import ChatBox from '@/components/ui/ChatBox';
 import UserInfoPopup from '@/components/ui/UserInfoPopup';
@@ -27,7 +27,7 @@ export default function Home() {
 
         <footer className="m-auto p-4">
           <a href="https://github.com/Mkneeshaw">
-            Demo built by MKneeshaw for Real Labs.
+            Proprietary Demo built by MKneeshaw owned by Sapient Industries.
           </a>
         </footer>
 
