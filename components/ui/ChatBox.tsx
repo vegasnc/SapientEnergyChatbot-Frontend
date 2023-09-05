@@ -30,6 +30,7 @@ export default function ChatBox(props: PropsType) {
     const [query, setQuery] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [apiArr, setAPIArr] = useState<Array<{api: string; response: string}>>([]);
     const [messageState, setMessageState] = useState<{
         messages: Message[];
         pending?: string;
@@ -50,7 +51,8 @@ export default function ChatBox(props: PropsType) {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
     const backendAPI = axios.create({
-        baseURL: "https://sback.kneeshaw-developments.com"
+        // baseURL: "https://sback.kneeshaw-developments.com"
+        baseURL : "http://localhost:5000"
     });
     backendAPI.defaults.headers.common['Content-Type'] = 'application/json';
     backendAPI.defaults.headers.common['User-Agent'] = 'XY';
@@ -131,6 +133,61 @@ export default function ChatBox(props: PropsType) {
         return false;
     };
 
+    async function getAPIAnswer(api: string, response: string) {
+        const question = response.trim();
+
+        setMessageState((state) => ({
+            ...state,
+            messages: [
+                ...state.messages,
+                {
+                    type: 'userMessage',
+                    message: question,
+                },
+            ],
+        }));
+
+        setLoading(true);
+
+        try {
+            const response = await backendAPI.post( "/api/get_api_answer", {
+                question: question,
+                api: api
+            });
+            const data = await response.data;
+            console.log('data', data);
+
+            if (data.error) {
+                setError(data.error);
+            } else {
+                console.log('data', data);
+                setMessageState((state) => ({
+                    ...state,
+                    messages: [
+                        ...state.messages,
+                        {
+                            type: 'apiMessage',
+                            message: data.answer,
+                        },
+                    ],
+                    history: [...state.history, [question, data.answer]],
+                }));
+
+                props.chatHistory(messageState);
+
+            }
+
+            setLoading(false);
+
+            //scroll to bottom
+            messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
+        } catch (error) {
+            setLoading(false);
+            setError('An error occurred while fetching the data. Please try again.');
+            console.log('error', error);
+        }
+    }
+
     //handle form submission
     async function handleSubmit(e: any) {
         e.preventDefault();
@@ -175,15 +232,16 @@ export default function ChatBox(props: PropsType) {
                         ...state.messages,
                         {
                             type: 'apiMessage',
-                            message: data.answer,
+                            message: data.answer.answer,
                         },
                     ],
-                    history: [...state.history, [question, data.answer]],
+                    history: [...state.history, [question, data.answer.answer]],
                 }));
 
                 props.chatHistory(messageState);
 
-                console.log(visObjList);
+                setAPIArr(data.answer.api);
+
             }
             console.log('messageState', messageState);
 
@@ -267,6 +325,7 @@ export default function ChatBox(props: PropsType) {
                                         ? styles.usermessagewaiting
                                         : styles.usermessage;
                             }
+
                             return (
                                 <>
                                     <div key={`chatMessage-${index}`} className={className}>
@@ -278,6 +337,18 @@ export default function ChatBox(props: PropsType) {
                                 </>
                             );
                         })}
+
+                        {
+                            !loading && apiArr.map((api_item, index) => {
+                                return (
+                                    <>
+                                        <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.response)}>
+                                            {api_item.response}
+                                        </div>
+                                    </>
+                                )
+                            })
+                        }
                     </div>
 
                     {loading ? (

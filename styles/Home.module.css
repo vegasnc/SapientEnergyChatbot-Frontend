@@ -234,6 +234,25 @@
   margin-bottom: 5px;
 }
 
+.apibutton {
+  padding: 0.8rem;
+  color: #000;
+  animation: fadein 0.5s;
+  border: none;
+  border-radius: 9px;
+  float: left;
+  max-width: 90%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 1px solid #E4E4E4;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.apibutton:hover {
+  background:rgb(204, 204, 204)
+}
+
 @keyframes fadein {
   from {
     opacity: 0;
@@ -245,6 +264,7 @@
 
 .apimessage,
 .usermessage,
+.apibutton,
 .usermessagewaiting {
   display: flex;
 }
