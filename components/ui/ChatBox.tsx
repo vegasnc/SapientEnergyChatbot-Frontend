@@ -282,7 +282,7 @@ export default function ChatBox(props: PropsType) {
                 closeOnEscape={true}
                 repositionOnResize={true}
                 arrow={false}
-                contentStyle={{ maxWidth: '300px', width: '70vw', padding: '0px' }}
+                contentStyle={{ maxWidth: '600px', width: '70vw', padding: '0px' }}
                 onOpen={openedPopup}
                 onClose={closedPopup}
             >
