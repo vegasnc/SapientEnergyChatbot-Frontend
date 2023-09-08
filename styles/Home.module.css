@@ -267,6 +267,7 @@
 .apibutton,
 .usermessagewaiting {
   display: flex;
+  clear: both;
 }
 
 .markdownanswer {
