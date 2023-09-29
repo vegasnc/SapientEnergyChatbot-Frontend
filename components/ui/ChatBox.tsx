@@ -4,8 +4,6 @@ import { Message } from '@/types/chat';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
-import { BarChart, Bar, CartesianGrid, XAxis, YAxis,
-         PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
@@ -361,41 +359,47 @@ export default function ChatBox(props: PropsType) {
                                         : styles.usermessage;
                             }
 
-                            if (message.format == TEXT_PIECHART_FORMAT) {
-                                graph = (
-                                    <div>
-                                        <PieChart width={400} height={400}>
-                                            <Pie
-                                                data={message.data}
-                                                dataKey="value"
-                                                cx="50%"
-                                                cy="50%"
-                                                outerRadius={60}
-                                                fill="#8884d8"
-                                                label
-                                            >
-                                            </Pie>
-                                        </PieChart>
-                                    </div>
-                                )
-                            } else if (message.format == TEXT_TABLE_FORMAT) {
-                                graph = (
-                                    <div>
+                            graph = (
+                                <div>
 
-                                    </div>
-                                )
-                            } else if (message.format == TEXT_BARCHART_FORMAT) {
-                                graph = (
-                                    <div>
-                                        <BarChart width={600} height={600} data={message.data}>
-                                            <Bar dataKey="value" fill='green' />
-                                            <CartesianGrid stroke="#ccc" />
-                                            <XAxis dataKey="name" />
-                                            <YAxis />
-                                        </BarChart>
-                                    </div>
-                                )
-                            }
+                                </div>
+                            )
+
+                            // if (message.format == TEXT_PIECHART_FORMAT) {
+                            //     graph = (
+                            //         <div>
+                            //             <PieChart width={400} height={400}>
+                            //                 <Pie
+                            //                     data={message.data}
+                            //                     dataKey="value"
+                            //                     cx="50%"
+                            //                     cy="50%"
+                            //                     outerRadius={60}
+                            //                     fill="#8884d8"
+                            //                     label
+                            //                 >
+                            //                 </Pie>
+                            //             </PieChart>
+                            //         </div>
+                            //     )
+                            // } else if (message.format == TEXT_TABLE_FORMAT) {
+                            //     graph = (
+                            //         <div>
+
+                            //         </div>
+                            //     )
+                            // } else if (message.format == TEXT_BARCHART_FORMAT) {
+                            //     graph = (
+                            //         <div>
+                            //             <BarChart width={600} height={600} data={message.data}>
+                            //                 <Bar dataKey="value" fill='green' />
+                            //                 <CartesianGrid stroke="#ccc" />
+                            //                 <XAxis dataKey="name" />
+                            //                 <YAxis />
+                            //             </BarChart>
+                            //         </div>
+                            //     )
+                            // }
 
                             return (
                                 <>
