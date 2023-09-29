@@ -132,6 +132,36 @@
     rgba(121, 109, 109, 0.25);
 }
 
+.feedbackFrom {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+
+.feedbackFrom input {
+  border-bottom: 2px solid #b6b5b5;
+  outline: none;
+}
+
+.feedbackFrom textarea {
+  border-bottom: 2px solid #b6b5b5;
+  outline: none;
+  resize: none;
+  max-height: 100px;
+}
+
+.feedbackFrom .feedbackBtn {
+  background-color: #14c4d0;
+  border-radius: 20px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  width: 100%;
+  margin: auto;
+  color: white;
+}
+
 .typingform {
   position: relative;
   margin-bottom: 10px;
@@ -181,7 +211,7 @@
 .chatheader {
   background-color: #14c4d0;
   color: white;
-  padding: 10px;
+  padding: 30px 10px 20px 10px;
   box-shadow: 3px 3px 12px 0px rgba(17, 144, 153, 0.35);
 }
 
@@ -211,6 +241,26 @@
   font-style: normal;
   font-weight: 500;
   line-height: 20px; /* 111.111% */
+}
+
+.startdatepicker {
+  margin-right: 10px !important;
+}
+
+.datepickerPanel {
+  margin: auto;
+  width: fit-content;
+}
+
+.feedback {
+  cursor: pointer;
+  font-size: small;
+  color: gray;
+  text-decoration: underline;
+}
+
+.feedback:hover {
+  color:#17c3ce;
 }
 
 @keyframes loading-gradient {
