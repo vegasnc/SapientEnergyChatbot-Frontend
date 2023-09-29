@@ -4,6 +4,8 @@ import { Message } from '@/types/chat';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
+import { BarChart, Bar, CartesianGrid, XAxis, YAxis,
+         PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
