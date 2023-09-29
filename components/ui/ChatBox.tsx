@@ -3,11 +3,17 @@ import styles from '@/styles/Home.module.css';
 import { Message } from '@/types/chat';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
-import LoadingDots from '@/components/ui/LoadingDots';
 import axios from 'axios';
-
+import { BarChart, Bar, CartesianGrid, XAxis, YAxis,
+         PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
+
+import dayjs, { Dayjs } from 'dayjs';
+
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { Document } from 'langchain/document';
 import { Close, CommentSolid } from '@/utils/icons';
@@ -17,7 +23,12 @@ interface VisObj {
     value: number;
 }
 const visObjList: VisObj[] = [];
-const SORRY_TEXT = "I'm sorry";
+
+const TEXT_FORMAT = "1";
+const TEXT_TABLE_FORMAT = "2";
+const TEXT_PIECHART_FORMAT = "3";
+const TEXT_BARCHART_FORMAT = "4";
+
 
 interface PropsType {
     chatHistory: Dispatch<SetStateAction<{ history: [string, string][] }>>;
@@ -30,7 +41,7 @@ export default function ChatBox(props: PropsType) {
     const [query, setQuery] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const [apiArr, setAPIArr] = useState<Array<{api: string; response: string}>>([]);
+    const [apiArr, setAPIArr] = useState<Array<{api: string; response: string; format: string}>>([]);
     const [messageState, setMessageState] = useState<{
         messages: Message[];
         pending?: string;
@@ -40,12 +51,18 @@ export default function ChatBox(props: PropsType) {
             {
                 message: 'Hello, How are you doing today?',
                 type: 'apiMessage',
+                data: [],
+                format: TEXT_FORMAT
             },
         ],
         history: [],
     });
     const [isOpenPopup, setOpenPopup] = useState(false);
     const { messages, history } = messageState;
+
+    const DateNow = new Date();
+    const [ startDate, setStartDate ] = useState(dayjs(DateNow.getFullYear() + "-" + DateNow.getMonth() + "-" + DateNow.getDate()));
+    const [ endDate, setEndDate ] = useState(dayjs(new Date()));
 
     const messageListRef = useRef<HTMLDivElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -94,6 +111,12 @@ export default function ChatBox(props: PropsType) {
         );
     };
 
+    const triggerFeedback = () => {
+        return(
+            <a className={styles.feedback} onClick={openFeedback}>Give me your feedback...</a>
+        );
+    };
+
     // Open popup
     const openedPopup = () => {
         setOpenPopup(true);
@@ -104,36 +127,7 @@ export default function ChatBox(props: PropsType) {
         setOpenPopup(false);
     };
 
-    // update and add a new visObj
-    function updateVisObjList(propertyID: string) {
-        const existingVisObj = visObjList.find((obj) => obj.propertyID === propertyID);
-
-        if (existingVisObj) {
-            return ++existingVisObj.value;
-        } else {
-            visObjList.push({ propertyID, value: 1 });
-            return 1;
-        }
-    }
-
-    // reset the specified visObj
-    function resetVisObjProperty(propertyID: string) {
-        const existingVisObj = visObjList.find((obj) => obj.propertyID === propertyID);
-
-        if (existingVisObj) {
-            existingVisObj.value = 0;
-        }
-    }
-
-    // check the source is suitable one
-    const isSuitableOne = (source: string, key: string) => {
-        if (source.includes(key)) {
-            return true;
-        }
-        return false;
-    };
-
-    async function getAPIAnswer(api: string, response: string) {
+    async function getAPIAnswer(api: string, format: string, response: string) {
         const question = response.trim();
 
         setMessageState((state) => ({
@@ -143,6 +137,8 @@ export default function ChatBox(props: PropsType) {
                 {
                     type: 'userMessage',
                     message: question,
+                    data: [],
+                    format: TEXT_FORMAT
                 },
             ],
         }));
@@ -152,9 +148,15 @@ export default function ChatBox(props: PropsType) {
         setLoading(true);
 
         try {
+            const stDate = startDate.get("year") + "-" + (startDate.get("month") + 1) + "-" + startDate.get("date");
+            const enDate = endDate.get("year") + "-" + (endDate.get("month") + 1) + "-" + endDate.get("date");
+
             const response = await backendAPI.post( "/api/get_api_answer", {
                 question: question,
-                api: api
+                api: api,
+                format: format,
+                stDate: stDate,
+                enDate: enDate
             });
             const data = await response.data;
             console.log('data', data);
@@ -170,13 +172,14 @@ export default function ChatBox(props: PropsType) {
                         {
                             type: 'apiMessage',
                             message: data.answer,
+                            data: data.ref_data,
+                            format: format
                         },
                     ],
                     history: [...state.history, [question, data.answer]],
                 }));
 
                 props.chatHistory(messageState);
-
             }
 
             setLoading(false);
@@ -210,6 +213,8 @@ export default function ChatBox(props: PropsType) {
                 {
                     type: 'userMessage',
                     message: question,
+                    data: [],
+                    format: TEXT_FORMAT
                 },
             ],
         }));
@@ -219,7 +224,7 @@ export default function ChatBox(props: PropsType) {
 
         try {
             const response = await backendAPI.post( "/api/get_answer", {
-                question: question,
+                question: question
             });
             const data = await response.data;
             console.log('data', data);
@@ -235,6 +240,8 @@ export default function ChatBox(props: PropsType) {
                         {
                             type: 'apiMessage',
                             message: data.answer.answer,
+                            data: [],
+                            format: TEXT_FORMAT
                         },
                     ],
                     history: [...state.history, [question, data.answer.answer]],
@@ -267,6 +274,14 @@ export default function ChatBox(props: PropsType) {
         }
     };
 
+    const openFeedback = () => {
+        
+    };
+
+    const handleFeedback = (e: any) => {
+        e.preventDefault();
+    };
+
     return (
         <div
             style={{
@@ -288,13 +303,31 @@ export default function ChatBox(props: PropsType) {
             >
                 <div className="mx-auto flex flex-col gap-4">
                     <div className={styles.chatheader}>
-                        <h3 className="text-base font-bold leading-[1.1] tracking-tighter text-center">
-                            Sapient Energy Chat Bot
-                        </h3>
+                        <div className={styles.datepickerPanel}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker 
+                                    slotProps={{ textField: { size: 'small' } }} 
+                                    label="Start Date" 
+                                    defaultValue={startDate} 
+                                    sx={{ '& input': {color: 'white'}, '& label': {color: 'white'}, '& button': {color: 'white'} }}
+                                    className={styles.startdatepicker}
+                                    onChange={date => setStartDate(dayjs(date))}
+                                />
+                                <DatePicker 
+                                    slotProps={{ textField: { size: 'small' } }} 
+                                    label="End Date" 
+                                    defaultValue={endDate} 
+                                    sx={{ '& input': {color: 'white'}, '& label': {color: 'white'}, '& button': {color: 'white'} }} 
+                                    className={styles.enddatepicker}
+                                    onChange={date => setEndDate(dayjs(date))}
+                                />
+                            </LocalizationProvider>
+                        </div>
                     </div>
                     <div ref={messageListRef} className={styles.messagelist}>
                         {messages.map((message, index) => {
                             let icon;
+                            let graph;
                             let className;
                             if (message.type === 'apiMessage') {
                                 icon = (
@@ -328,12 +361,48 @@ export default function ChatBox(props: PropsType) {
                                         : styles.usermessage;
                             }
 
+                            if (message.format == TEXT_PIECHART_FORMAT) {
+                                graph = (
+                                    <div>
+                                        <PieChart width={400} height={400}>
+                                            <Pie
+                                                data={message.data}
+                                                dataKey="value"
+                                                cx="50%"
+                                                cy="50%"
+                                                outerRadius={60}
+                                                fill="#8884d8"
+                                                label
+                                            >
+                                            </Pie>
+                                        </PieChart>
+                                    </div>
+                                )
+                            } else if (message.format == TEXT_TABLE_FORMAT) {
+                                graph = (
+                                    <div>
+
+                                    </div>
+                                )
+                            } else if (message.format == TEXT_BARCHART_FORMAT) {
+                                graph = (
+                                    <div>
+                                        <BarChart width={600} height={600} data={message.data}>
+                                            <Bar dataKey="value" fill='green' />
+                                            <CartesianGrid stroke="#ccc" />
+                                            <XAxis dataKey="name" />
+                                            <YAxis />
+                                        </BarChart>
+                                    </div>
+                                )
+                            }
+
                             return (
                                 <>
                                     <div key={`chatMessage-${index}`} className={className}>
                                         {/* {icon} */}
                                         <div className={styles.markdownanswer}>
-                                            <ReactMarkdown linkTarget="_blank">{message.message}</ReactMarkdown>
+                                            <ReactMarkdown linkTarget="_blank">{String(message.message).replaceAll("\n", "\n\n")}</ReactMarkdown>
                                         </div>
                                     </div>
                                 </>
@@ -344,7 +413,7 @@ export default function ChatBox(props: PropsType) {
                             !loading && apiArr.length > 0 && apiArr.map((api_item, index) => {
                                 return (
                                     <>
-                                        <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.response)}>
+                                        <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.format, api_item.response)}>
                                             {api_item.response}
                                         </div>
                                     </>
@@ -364,40 +433,61 @@ export default function ChatBox(props: PropsType) {
                                     <p className="text-red-500">{error}</p>
                                 </div>
                             ) : (
-                                <form className={styles.typingform} onSubmit={handleSubmit}>
-                                    <div className={styles.typingdiv}>
-                                        <textarea
-                                            disabled={loading}
-                                            className={styles.typingbox}
-                                            rows={1}
-                                            onKeyDown={handleEnter}
-                                            ref={textAreaRef}
-                                            autoFocus={false}
-                                            id="userInput"
-                                            name="userInput"
-                                            placeholder={loading ? 'Waiting for response...' : 'Ask me anything...'}
-                                            value={query}
-                                            onChange={(e) => setQuery(e.target.value)}
-                                        />
-                                    </div>
-                                    <button className={styles.btnsend} type="submit" disabled={loading}>
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="30"
-                                            height="30"
-                                            viewBox="0 0 30 30"
-                                            fill="none"
-                                        >
-                                            <path
-                                                d="M7.60304 14.4388L13.9405 14.43M11.6869 5.56489L21.6924 10.5677C26.1826 12.8127 26.1737 16.4809 21.6924 18.7348L11.6869 23.7375C4.96053 27.1051 2.20281 24.3474 5.57041 17.6211L7.05533 14.6512L5.57041 11.6814C2.20281 4.95501 4.95169 2.20614 11.6869 5.56489Z"
-                                                stroke="white"
-                                                strokeWidth="2.10714"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
+                                <div className='w-full text-center'>
+                                    <form className={styles.typingform} onSubmit={handleSubmit}>
+                                        <div className={styles.typingdiv}>
+                                            <textarea
+                                                disabled={loading}
+                                                className={styles.typingbox}
+                                                rows={1}
+                                                onKeyDown={handleEnter}
+                                                ref={textAreaRef}
+                                                autoFocus={false}
+                                                id="userInput"
+                                                name="userInput"
+                                                placeholder={loading ? 'Waiting for response...' : 'Ask me anything...'}
+                                                value={query}
+                                                onChange={(e) => setQuery(e.target.value)}
                                             />
-                                        </svg>
-                                    </button>
-                                </form>
+                                        </div>
+                                        <button className={styles.btnsend} type="submit" disabled={loading}>
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="30"
+                                                height="30"
+                                                viewBox="0 0 30 30"
+                                                fill="none"
+                                            >
+                                                <path
+                                                    d="M7.60304 14.4388L13.9405 14.43M11.6869 5.56489L21.6924 10.5677C26.1826 12.8127 26.1737 16.4809 21.6924 18.7348L11.6869 23.7375C4.96053 27.1051 2.20281 24.3474 5.57041 17.6211L7.05533 14.6512L5.57041 11.6814C2.20281 4.95501 4.95169 2.20614 11.6869 5.56489Z"
+                                                    stroke="white"
+                                                    strokeWidth="2.10714"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </form>
+                                    <Popup
+                                        trigger={triggerFeedback}
+                                        position="top center"
+                                        closeOnDocumentClick={true}
+                                        closeOnEscape={true}
+                                        repositionOnResize={true}
+                                        arrow={false}
+                                        contentStyle={{ maxWidth: '560px', width: '70vw', padding: '0px', margin:'auto' }}
+                                    >
+                                        <form onSubmit={handleFeedback} className={styles.feedbackFrom}>
+
+                                            <input type="text" name="name" placeholder="Name" />
+                                            <input type="text" name="email" placeholder="Email" />
+                                            <input type="text" name="subject" placeholder="Subject" />
+                                            <textarea id="subject" name="message" placeholder="Message" style={{"height" : "200px"}}></textarea>
+
+                                            <button className={styles.feedbackBtn}>Submit</button>
+                                        </form>
+                                    </Popup>
+                                </div>
                             )}
                         </div>
                     )}
