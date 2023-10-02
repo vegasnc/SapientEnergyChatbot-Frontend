@@ -117,7 +117,7 @@ export default function ChatBox(props: PropsType) {
 
     const triggerFeedback = () => {
         return(
-            <a className={styles.feedback} onClick={openFeedback}>Give me your feedback...</a>
+            <a className={styles.feedback} onClick={openFeedback}>Leave your feedback...</a>
         );
     };
 
