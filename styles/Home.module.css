@@ -352,6 +352,17 @@
   height: 100%;
 }
 
+.emotic {
+  margin-right: 1rem;
+  border-radius: 0.1rem;
+  height: 100%;
+  cursor: pointer;
+}
+
+.emotic:hover {
+  border: 1px solid grey;
+}
+
 .markdownanswer h1,
 .markdownanswer h2,
 .markdownanswer h3 {

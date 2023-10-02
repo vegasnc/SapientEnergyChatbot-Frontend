@@ -82,6 +82,10 @@ export default function ChatBox(props: PropsType) {
         messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
     }, [messageState.messages]);
 
+    useEffect(() => {
+        textAreaRef.current?.focus();
+    }, [isOpenPopup]);
+
     const clearHistory = () => {
         // setQuery("");
         // setLoading(false);
@@ -484,11 +488,81 @@ export default function ChatBox(props: PropsType) {
                                         contentStyle={{ maxWidth: '560px', width: '70vw', padding: '0px', margin:'auto' }}
                                     >
                                         <form onSubmit={handleFeedback} className={styles.feedbackFrom}>
-
-                                            <input type="text" name="name" placeholder="Name" />
-                                            <input type="text" name="email" placeholder="Email" />
-                                            <input type="text" name="subject" placeholder="Subject" />
-                                            <textarea id="subject" name="message" placeholder="Message" style={{"height" : "200px"}}></textarea>
+                                            <div>
+                                                <div>Rate My Data: </div>
+                                                <div className='flex item-center'>
+                                                    <Image
+                                                        src="/rate_1.png"
+                                                        alt="AI"
+                                                        width="25"
+                                                        height="25"
+                                                        className={styles.emotic}
+                                                        priority
+                                                    />
+                                                    <Image
+                                                        src="/rate_2.png"
+                                                        alt="AI"
+                                                        width="25"
+                                                        height="25"
+                                                        className={styles.emotic}
+                                                        priority
+                                                    />
+                                                    <Image
+                                                        src="/rate_3.png"
+                                                        alt="AI"
+                                                        width="25"
+                                                        height="25"
+                                                        className={styles.emotic}
+                                                        priority
+                                                    />
+                                                    <Image
+                                                        src="/rate_4.png"
+                                                        alt="AI"
+                                                        width="25"
+                                                        height="25"
+                                                        className={styles.emotic}
+                                                        priority
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div>Rate my ability to answer: </div>
+                                                <div className='flex item-center'>
+                                                    <Image
+                                                        src="/rate_1.png"
+                                                        alt="AI"
+                                                        width="25"
+                                                        height="25"
+                                                        className={styles.emotic}
+                                                        priority
+                                                    />
+                                                    <Image
+                                                        src="/rate_2.png"
+                                                        alt="AI"
+                                                        width="25"
+                                                        height="25"
+                                                        className={styles.emotic}
+                                                        priority
+                                                    />
+                                                    <Image
+                                                        src="/rate_3.png"
+                                                        alt="AI"
+                                                        width="25"
+                                                        height="25"
+                                                        className={styles.emotic}
+                                                        priority
+                                                    />
+                                                    <Image
+                                                        src="/rate_4.png"
+                                                        alt="AI"
+                                                        width="25"
+                                                        height="25"
+                                                        className={styles.emotic}
+                                                        priority
+                                                    />
+                                                </div>
+                                            </div>
+                                            <textarea id="subject" name="message" placeholder="Addtional Comments" style={{"height" : "200px"}}></textarea>
 
                                             <button className={styles.feedbackBtn}>Submit</button>
                                         </form>
