@@ -17,7 +17,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { Document } from 'langchain/document';
 import { Close, CommentSolid } from '@/utils/icons';
-import { toast } from 'react-toastify';
 
 interface VisObj {
     propertyID: string;
@@ -34,6 +33,7 @@ const TEXT_BARCHART_FORMAT = "4";
 interface PropsType {
     chatHistory: Dispatch<SetStateAction<{ history: [string, string][] }>>;
     toggle: () => void;
+    showToast: (message: string, type: string) => void;
 }
 
 const UID = Math.random().toString(36).substring(2, 9);
@@ -209,8 +209,8 @@ export default function ChatBox(props: PropsType) {
         setError(null);
 
         if (!query) {
-            toast.warning("Please fill out the content", {position: toast.POSITION.BOTTOM_RIGHT});
-            return;
+            props.showToast("Please fill out the content", "warning");
+            return "Notify!";
         }
 
         const question = query.trim();
@@ -287,8 +287,9 @@ export default function ChatBox(props: PropsType) {
         e.preventDefault();
 
         if( senderEmail == "" ) {
-            toast.warning("Please fill out your email", {position: toast.POSITION.BOTTOM_RIGHT});
-            return;
+            props.showToast("Please fill out your email", "warning");
+            // toast.warning("Please fill out your email", {position: toast.POSITION.BOTTOM_RIGHT});
+            return "Notify!";
         }
 
         let messageHistory = "";
@@ -308,9 +309,11 @@ export default function ChatBox(props: PropsType) {
         });
         const data = await response.data;
         if( data.result == "success" ) {
-            toast.success("Thanks. Successfully sent!", {position: toast.POSITION.BOTTOM_RIGHT});
+            // toast.success("Thanks. Successfully sent!", {position: toast.POSITION.BOTTOM_RIGHT});
+            props.showToast("Thanks. Successfully sent!", "success");
         } else {
-            toast.warning("Sorry, Please try again later", {position: toast.POSITION.BOTTOM_RIGHT});
+            // toast.warning("Sorry, Please try again later", {position: toast.POSITION.BOTTOM_RIGHT});
+            props.showToast("Sorry, Please try again later", "warning");
         }
     };
 
