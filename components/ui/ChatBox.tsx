@@ -19,8 +19,6 @@ import { Document } from 'langchain/document';
 import { Close, CommentSolid } from '@/utils/icons';
 import { toast } from 'react-toastify';
 
-import 'react-toastify/dist/ReactToastify.css';
-
 interface VisObj {
     propertyID: string;
     value: number;
