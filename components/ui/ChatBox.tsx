@@ -66,13 +66,14 @@ export default function ChatBox(props: PropsType) {
     const [ endDate, setEndDate ] = useState(dayjs(new Date()));
     const [ myDataRate, setMyDataRate ] = useState(0);
     const [ myAbilityRate, setMyAbilityRate ] = useState(0);
+    const [ senderEmail, setSenderEmail ] = useState("")
 
     const messageListRef = useRef<HTMLDivElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
     const backendAPI = axios.create({
-        baseURL: "https://sback.kneeshaw-developments.com"
-        // baseURL : "http://localhost:5000"
+        // baseURL: "https://sback.kneeshaw-developments.com"
+        baseURL : "http://localhost:5000"
     });
     backendAPI.defaults.headers.common['Content-Type'] = 'application/json';
     backendAPI.defaults.headers.common['User-Agent'] = 'XY';
@@ -295,7 +296,8 @@ export default function ChatBox(props: PropsType) {
             feedback: additionalComments,
             history: messageHistory,
             rate_my_data: myDataRate,
-            rate_my_ability: myAbilityRate
+            rate_my_ability: myAbilityRate,
+            email: senderEmail
         });
         const responseData = await response.data;
         console.log(responseData);
@@ -311,6 +313,10 @@ export default function ChatBox(props: PropsType) {
 
     const handleAdditionalComments = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setAdditionalComments(e.target.value);
+    }
+
+    const handleSenderEmail = (e: any) => {
+        setSenderEmail(e.target.value)
     }
 
     return (
@@ -516,6 +522,11 @@ export default function ChatBox(props: PropsType) {
                                     >
                                         <form onSubmit={handleFeedback} className={styles.feedbackFrom}>
                                             <div>
+                                                <input 
+                                                    type="text" 
+                                                    placeholder="Enter your email" 
+                                                    value={senderEmail} 
+                                                    onChange={handleSenderEmail}/>
                                                 <div>Rate My Data: </div>
                                                 <div className='flex item-center'>
                                                     <Image

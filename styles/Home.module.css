@@ -141,8 +141,12 @@
 }
 
 .feedbackFrom input {
+  display: flex;
   border-bottom: 2px solid #b6b5b5;
+  margin-bottom: 15px;
+  padding: 3px;
   outline: none;
+  width: 50%;
 }
 
 .feedbackFrom textarea {
@@ -369,6 +373,11 @@
   height: 100%;
   cursor: pointer;
   border: 1px solid grey;
+}
+
+.feebacksender {
+  display: flex;
+  align-items: center;
 }
 
 .markdownanswer h1,
