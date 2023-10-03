@@ -17,6 +17,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { Document } from 'langchain/document';
 import { Close, CommentSolid } from '@/utils/icons';
+import { toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 interface VisObj {
     propertyID: string;
@@ -208,7 +211,7 @@ export default function ChatBox(props: PropsType) {
         setError(null);
 
         if (!query) {
-            alert('Please input a question');
+            toast.warning("Please fill out the content", {position: toast.POSITION.BOTTOM_RIGHT});
             return;
         }
 
@@ -284,6 +287,12 @@ export default function ChatBox(props: PropsType) {
 
     const handleFeedback = async (e: any) => {
         e.preventDefault();
+
+        if( senderEmail == "" ) {
+            toast.warning("Please fill out your email", {position: toast.POSITION.BOTTOM_RIGHT});
+            return;
+        }
+
         let messageHistory = "";
         messages.map((message) => {
             if( message.type == 'apiMessage' )
@@ -301,9 +310,9 @@ export default function ChatBox(props: PropsType) {
         });
         const data = await response.data;
         if( data.result == "success" ) {
-            alert("success!")
+            toast.success("Thanks. Successfully sent!", {position: toast.POSITION.BOTTOM_RIGHT});
         } else {
-            alert("failure!")
+            toast.warning("Sorry, Please try again later", {position: toast.POSITION.BOTTOM_RIGHT});
         }
     };
 
