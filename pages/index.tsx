@@ -7,9 +7,8 @@ import UserInfoPopup from '@/components/ui/UserInfoPopup';
 import useModal from "@/hooks/useModal";
 import UserInformationForm from '@/components/ui/UserInformationForm';
 
-import { ToastContainer, toast } from 'react-toastify';
+// import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
-import '@/node_modules/react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
 
@@ -21,19 +20,19 @@ export default function Home() {
     history: []
   });
 
-  const showToast = (message : string, type : string) => {
-    if( type == "warning" ) {
-      toast.warning(message, {position: toast.POSITION.BOTTOM_RIGHT});
-    } else if ( type == "success" ) {
-      toast.success(message, {position: toast.POSITION.BOTTOM_RIGHT});
-    }
-  }
+  // const showToast = (message : string, type : string) => {
+  //   if( type == "warning" ) {
+  //     toast.warning(message, {position: toast.POSITION.BOTTOM_RIGHT});
+  //   } else if ( type == "success" ) {
+  //     toast.success(message, {position: toast.POSITION.BOTTOM_RIGHT});
+  //   }
+  // }
 
   return (
     <>
       <Layout>
 
-        <ToastContainer 
+        {/* <ToastContainer 
           position='top-right' 
           autoClose={5000} 
           hideProgressBar={false}
@@ -41,9 +40,10 @@ export default function Home() {
           rtl={false}
           pauseOnFocusLoss
           draggable
-          pauseOnHover/>
+          pauseOnHover/> */}
         
-        <ChatBox chatHistory={setChatHistory} toggle={toggle} showToast={showToast}></ChatBox>
+        {/* <ChatBox chatHistory={setChatHistory} toggle={toggle} showToast={showToast}></ChatBox> */}
+        <ChatBox chatHistory={setChatHistory} toggle={toggle}></ChatBox>
 
         <footer className="m-auto p-4">
           <a href="https://github.com/Mkneeshaw">

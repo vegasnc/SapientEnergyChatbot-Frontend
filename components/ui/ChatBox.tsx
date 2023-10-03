@@ -33,7 +33,7 @@ const TEXT_BARCHART_FORMAT = "4";
 interface PropsType {
     chatHistory: Dispatch<SetStateAction<{ history: [string, string][] }>>;
     toggle: () => void;
-    showToast: (message: string, type: string) => void;
+    // showToast: (message: string, type: string) => void;
 }
 
 const UID = Math.random().toString(36).substring(2, 9);
@@ -209,7 +209,8 @@ export default function ChatBox(props: PropsType) {
         setError(null);
 
         if (!query) {
-            props.showToast("Please fill out the content", "warning");
+            // props.showToast("Please fill out the content", "warning");
+            alert("Please fill out the content");
             return "Notify!";
         }
 
@@ -287,7 +288,8 @@ export default function ChatBox(props: PropsType) {
         e.preventDefault();
 
         if( senderEmail == "" ) {
-            props.showToast("Please fill out your email", "warning");
+            // props.showToast("Please fill out your email", "warning");
+            alert("Please fill out your email");
             // toast.warning("Please fill out your email", {position: toast.POSITION.BOTTOM_RIGHT});
             return "Notify!";
         }
@@ -310,10 +312,12 @@ export default function ChatBox(props: PropsType) {
         const data = await response.data;
         if( data.result == "success" ) {
             // toast.success("Thanks. Successfully sent!", {position: toast.POSITION.BOTTOM_RIGHT});
-            props.showToast("Thanks. Successfully sent!", "success");
+            // props.showToast("Thanks. Successfully sent!", "success");
+            alert("Thanks. Successfully sent!");
         } else {
             // toast.warning("Sorry, Please try again later", {position: toast.POSITION.BOTTOM_RIGHT});
-            props.showToast("Sorry, Please try again later", "warning");
+            // props.showToast("Sorry, Please try again later", "warning");
+            alert("Sorry, Please try again later");
         }
     };
 
