@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useReducer } from 'react';
 import Layout from '@/components/layout';
 import styles from '@/styles/Home.module.css';
 
