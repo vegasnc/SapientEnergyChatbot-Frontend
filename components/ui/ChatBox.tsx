@@ -59,10 +59,13 @@ export default function ChatBox(props: PropsType) {
     });
     const [isOpenPopup, setOpenPopup] = useState(false);
     const { messages, history } = messageState;
+    const [additionalComments, setAdditionalComments] = useState("");
 
     const DateNow = new Date();
     const [ startDate, setStartDate ] = useState(dayjs(DateNow.getFullYear() + "-" + DateNow.getMonth() + "-" + DateNow.getDate()));
     const [ endDate, setEndDate ] = useState(dayjs(new Date()));
+    const [ myDataRate, setMyDataRate ] = useState(0);
+    const [ myAbilityRate, setMyAbilityRate ] = useState(0);
 
     const messageListRef = useRef<HTMLDivElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -117,7 +120,7 @@ export default function ChatBox(props: PropsType) {
 
     const triggerFeedback = () => {
         return(
-            <a className={styles.feedback} onClick={openFeedback}>Leave your feedback...</a>
+            <a className={styles.feedback}>Leave your feedback...</a>
         );
     };
 
@@ -278,13 +281,37 @@ export default function ChatBox(props: PropsType) {
         }
     };
 
-    const openFeedback = () => {
-        
+    const handleFeedback = async (e: any) => {
+        e.preventDefault();
+        let messageHistory = "";
+        messages.map((message) => {
+            if( message.type == 'apiMessage' )
+                messageHistory += "AI : " + message.message + "\n\n";
+            else if( message.type == 'userMessage' )
+                messageHistory += "User : " + message.message + "\n\n";
+        })
+
+        const response = await backendAPI.post( "/api/send_feedback", {
+            feedback: additionalComments,
+            history: messageHistory,
+            rate_my_data: myDataRate,
+            rate_my_ability: myAbilityRate
+        });
+        const responseData = await response.data;
+        console.log(responseData);
     };
 
-    const handleFeedback = (e: any) => {
-        e.preventDefault();
+    const clickRateMyData = (rate: number) => {
+        setMyDataRate(rate);
     };
+
+    const clickRateMyAnswer = (rate: number) => {
+        setMyAbilityRate(rate);
+    };
+
+    const handleAdditionalComments = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setAdditionalComments(e.target.value);
+    }
 
     return (
         <div
@@ -496,7 +523,8 @@ export default function ChatBox(props: PropsType) {
                                                         alt="AI"
                                                         width="25"
                                                         height="25"
-                                                        className={styles.emotic}
+                                                        className={myDataRate == 0 ? styles.emoticactive : styles.emotic}
+                                                        onClick={() => clickRateMyData(0)}
                                                         priority
                                                     />
                                                     <Image
@@ -504,7 +532,8 @@ export default function ChatBox(props: PropsType) {
                                                         alt="AI"
                                                         width="25"
                                                         height="25"
-                                                        className={styles.emotic}
+                                                        className={myDataRate == 1 ? styles.emoticactive : styles.emotic}
+                                                        onClick={() => clickRateMyData(1)}
                                                         priority
                                                     />
                                                     <Image
@@ -512,7 +541,8 @@ export default function ChatBox(props: PropsType) {
                                                         alt="AI"
                                                         width="25"
                                                         height="25"
-                                                        className={styles.emotic}
+                                                        className={myDataRate == 2 ? styles.emoticactive : styles.emotic}
+                                                        onClick={() => clickRateMyData(2)}
                                                         priority
                                                     />
                                                     <Image
@@ -520,7 +550,8 @@ export default function ChatBox(props: PropsType) {
                                                         alt="AI"
                                                         width="25"
                                                         height="25"
-                                                        className={styles.emotic}
+                                                        className={myDataRate == 3 ? styles.emoticactive : styles.emotic}
+                                                        onClick={() => clickRateMyData(3)}
                                                         priority
                                                     />
                                                 </div>
@@ -533,7 +564,8 @@ export default function ChatBox(props: PropsType) {
                                                         alt="AI"
                                                         width="25"
                                                         height="25"
-                                                        className={styles.emotic}
+                                                        className={myAbilityRate == 0 ? styles.emoticactive : styles.emotic}
+                                                        onClick={() => clickRateMyAnswer(0)}
                                                         priority
                                                     />
                                                     <Image
@@ -541,7 +573,8 @@ export default function ChatBox(props: PropsType) {
                                                         alt="AI"
                                                         width="25"
                                                         height="25"
-                                                        className={styles.emotic}
+                                                        className={myAbilityRate == 1 ? styles.emoticactive : styles.emotic}
+                                                        onClick={() => clickRateMyAnswer(1)}
                                                         priority
                                                     />
                                                     <Image
@@ -549,7 +582,8 @@ export default function ChatBox(props: PropsType) {
                                                         alt="AI"
                                                         width="25"
                                                         height="25"
-                                                        className={styles.emotic}
+                                                        className={myAbilityRate == 2 ? styles.emoticactive : styles.emotic}
+                                                        onClick={() => clickRateMyAnswer(2)}
                                                         priority
                                                     />
                                                     <Image
@@ -557,12 +591,19 @@ export default function ChatBox(props: PropsType) {
                                                         alt="AI"
                                                         width="25"
                                                         height="25"
-                                                        className={styles.emotic}
+                                                        className={myAbilityRate == 3 ? styles.emoticactive : styles.emotic}
+                                                        onClick={() => clickRateMyAnswer(3)}
                                                         priority
                                                     />
                                                 </div>
                                             </div>
-                                            <textarea id="subject" name="message" placeholder="Addtional Comments" style={{"height" : "200px"}}></textarea>
+                                            <textarea 
+                                                id="subject" 
+                                                name="message" 
+                                                placeholder="Additional Comments" 
+                                                style={{"height" : "200px"}} 
+                                                value={additionalComments} 
+                                                onChange={handleAdditionalComments}></textarea>
 
                                             <button className={styles.feedbackBtn}>Submit</button>
                                         </form>
