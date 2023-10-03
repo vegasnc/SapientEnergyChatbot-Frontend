@@ -1,4 +1,4 @@
-import { useState, useRef, useReducer } from 'react';
+import { useState, useRef } from 'react';
 import Layout from '@/components/layout';
 import styles from '@/styles/Home.module.css';
 
@@ -8,7 +8,8 @@ import useModal from "@/hooks/useModal";
 import UserInformationForm from '@/components/ui/UserInformationForm';
 
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// import 'react-toastify/dist/ReactToastify.css';
+import '@/node_modules/react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
 

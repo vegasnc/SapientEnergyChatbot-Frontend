@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, Dispatch, SetStateAction, useReducer } from 'react';
+import { useRef, useState, useEffect, Dispatch, SetStateAction } from 'react';
 import styles from '@/styles/Home.module.css';
 import { Message } from '@/types/chat';
 import Image from 'next/image';
