@@ -299,8 +299,12 @@ export default function ChatBox(props: PropsType) {
             rate_my_ability: myAbilityRate,
             email: senderEmail
         });
-        const responseData = await response.data;
-        console.log(responseData);
+        const data = await response.data;
+        if( data.result == "success" ) {
+            alert("success!")
+        } else {
+            alert("failure!")
+        }
     };
 
     const clickRateMyData = (rate: number) => {
