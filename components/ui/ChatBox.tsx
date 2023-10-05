@@ -471,7 +471,7 @@ export default function ChatBox(props: PropsType) {
                         })}
 
                         {
-                            !loading && apiArr.length > 0 && apiArr.map((api_item, index) => {
+                            !loading && apiArr && apiArr.length > 0 && apiArr.map((api_item, index) => {
                                 return (
                                     <>
                                         <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.format, api_item.response)}>
