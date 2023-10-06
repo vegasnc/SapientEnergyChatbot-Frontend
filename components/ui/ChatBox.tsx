@@ -73,8 +73,8 @@ export default function ChatBox(props: PropsType) {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
     const backendAPI = axios.create({
-        baseURL: "https://sback.kneeshaw-developments.com"
-        // baseURL : "http://localhost:5000"
+        // baseURL: "https://sback.kneeshaw-developments.com"
+        baseURL : "http://localhost:5000"
     });
     backendAPI.defaults.headers.common['Content-Type'] = 'application/json';
     backendAPI.defaults.headers.common['User-Agent'] = 'XY';
@@ -352,7 +352,7 @@ export default function ChatBox(props: PropsType) {
                 closeOnEscape={true}
                 repositionOnResize={true}
                 arrow={false}
-                contentStyle={{ maxWidth: '600px', width: '70vw', padding: '0px' }}
+                contentStyle={{ maxWidth: '600px', width: '70vw', padding: '0px', borderRadius: "0.5rem" }}
                 onOpen={openedPopup}
                 onClose={closedPopup}
             >

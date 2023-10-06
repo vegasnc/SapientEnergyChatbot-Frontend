@@ -94,20 +94,21 @@
 
 .usermessage {
   padding: 0.8rem;
-  color: #ffffff;
+  color: #fff;
   border-radius: 19px 19px 0px 19px;
-  background: #17c3ce;
+  background: #444ce7;
   float: right;
   max-width: 90%;
   margin-top: 5px;
   margin-bottom: 5px;
+  font-size: large;
 }
 
 .usermessagewaiting {
   padding: 0.8rem;
   color: #ffffff;
   border-radius: 19px 19px 0px 19px;
-  background: linear-gradient(to left, #17c3ce, #1ce6f5, #14c4d0);
+  background: linear-gradient(to left, #444ce7, #656be2, #464ee9);
   background-size: 200% 200%;
   background-position: -100% 0;
   animation: loading-gradient 2s ease-in-out infinite;
@@ -117,6 +118,7 @@
   max-width: 90%;
   margin-top: 5px;
   margin-bottom: 5px;
+  font-size: large;
 }
 
 .typingdiv {
@@ -157,7 +159,7 @@
 }
 
 .feedbackFrom .feedbackBtn {
-  background-color: #14c4d0;
+  background-color: #444ce7;
   border-radius: 20px;
   padding-top: 6px;
   padding-bottom: 6px;
@@ -208,15 +210,17 @@
   gap: 14px;
   flex-shrink: 0;
   border-radius: 70.238px;
-  background: #17c3ce;
+  background: #444ce7;
   box-shadow: 3px 3px 12px 0px rgba(17, 144, 153, 0.35);
 }
 
 .chatheader {
-  background-color: #14c4d0;
-  color: white;
+  background-color: #444ce7;
+  color: #2a2b44;
   padding: 30px 10px 20px 10px;
   box-shadow: 3px 3px 12px 0px rgba(17, 144, 153, 0.35);
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
 }
 
 .loadingdiv {
@@ -229,8 +233,8 @@
   align-items: center;
   margin: auto;
   margin-bottom: 10px;
-  background-color: #14c4d0;
-  background: linear-gradient(to left, #17c3ce, #1ce6f5, #14c4d0);
+  background-color: #444ce7;
+  background: linear-gradient(to left, #444ce7, #656be2, #464ee9);
   background-size: 200% 200%;
   background-position: -100% 0;
   animation: loading-gradient 2s ease-in-out infinite;
@@ -286,6 +290,7 @@
   max-width: 90%;
   margin-top: 5px;
   margin-bottom: 5px;
+  font-size: large;
 }
 
 .apibutton {
