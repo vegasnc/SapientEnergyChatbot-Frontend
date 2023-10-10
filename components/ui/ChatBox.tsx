@@ -42,7 +42,7 @@ export default function ChatBox(props: PropsType) {
     const [query, setQuery] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const [apiArr, setAPIArr] = useState<Array<{api: string; response: string; format: string}>>([]);
+    const [apiArr, setAPIArr] = useState<Array<{api: string; response: string; format: string; title: string}>>([]);
     const [messageState, setMessageState] = useState<{
         messages: Message[];
         pending?: string;
@@ -237,7 +237,6 @@ export default function ChatBox(props: PropsType) {
                 question: question
             });
             const data = await response.data;
-            console.log('data', data);
 
             if (data.error) {
                 setError(data.error);
@@ -475,7 +474,7 @@ export default function ChatBox(props: PropsType) {
                                 return (
                                     <>
                                         <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.format, api_item.response)}>
-                                            {api_item.response}
+                                            {api_item.title != "" ? `${api_item.title}` : `${api_item.response}`}
                                         </div>
                                     </>
                                 )
