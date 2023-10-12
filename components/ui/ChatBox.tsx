@@ -136,8 +136,8 @@ export default function ChatBox(props: PropsType) {
         setOpenPopup(false);
     };
 
-    async function getAPIAnswer(api: string, format: string, response: string) {
-        const question = response.trim();
+    async function getAPIAnswer(api: string, format: string, title: string) {
+        const question = title.trim();
 
         setMessageState((state) => ({
             ...state,
@@ -233,8 +233,13 @@ export default function ChatBox(props: PropsType) {
         setQuery('');
 
         try {
+            const stDate = startDate.get("year") + "-" + (startDate.get("month") + 1) + "-" + startDate.get("date");
+            const enDate = endDate.get("year") + "-" + (endDate.get("month") + 1) + "-" + endDate.get("date");
+            
             const response = await backendAPI.post( "/api/get_answer", {
-                question: question
+                question: question,
+                stDate: stDate,
+                enDate: enDate
             });
             const data = await response.data;
 
@@ -473,7 +478,7 @@ export default function ChatBox(props: PropsType) {
                             !loading && apiArr && apiArr.length > 0 && apiArr.map((api_item, index) => {
                                 return (
                                     <>
-                                        <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.format, api_item.response)}>
+                                        <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.format, api_item.title != "" ? `${api_item.title}` : `${api_item.response}`)}>
                                             {api_item.title != "" ? `${api_item.title}` : `${api_item.response}`}
                                         </div>
                                     </>
