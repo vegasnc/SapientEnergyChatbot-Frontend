@@ -618,7 +618,7 @@ export default function ChatBox(props: PropsType) {
                                         autoWidth
                                     >
                                         {
-                                            dropdownValueArray.map((value, i) => <MenuItem value={i}>{value.name}</MenuItem>)
+                                            dropdownValueArray.map((value, i) => <MenuItem value={i}  key={i}>{value.name}</MenuItem>)
                                         }
                                     </Select>
                                 </FormControl>
