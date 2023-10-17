@@ -8,14 +8,14 @@ import { BarChart, Bar, CartesianGrid, XAxis, YAxis,
          PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import dayjs, { Dayjs } from 'dayjs';
-
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-import { Document } from 'langchain/document';
 import { Close, CommentSolid } from '@/utils/icons';
 
 interface VisObj {
@@ -23,12 +23,27 @@ interface VisObj {
     value: number;
 }
 const visObjList: VisObj[] = [];
-
 const TEXT_FORMAT = "1";
 const TEXT_TABLE_FORMAT = "2";
 const TEXT_PIECHART_FORMAT = "3";
 const TEXT_BARCHART_FORMAT = "4";
-
+const API_DROPDOWN_END_USE = "end_use";
+const API_DROPDOWN_EQUIPMENT  = "equipment";
+const API_DROPDOWN_EQUIPMENT_TYPE = "equipment_type";
+const API_DROPDOWN_SPACE_TYPE = "space_type";
+const API_DROPDOWN_CIRCUIT = "circuit_type";
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+      border: 0
+    },
+  },
+};
+const UID = Math.random().toString(36).substring(2, 9);
 
 interface PropsType {
     chatHistory: Dispatch<SetStateAction<{ history: [string, string][] }>>;
@@ -36,13 +51,12 @@ interface PropsType {
     // showToast: (message: string, type: string) => void;
 }
 
-const UID = Math.random().toString(36).substring(2, 9);
 
 export default function ChatBox(props: PropsType) {
     const [query, setQuery] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const [apiArr, setAPIArr] = useState<Array<{api: string; response: string; format: string; title: string}>>([]);
+    const [apiArr, setAPIArr] = useState<Array<{api: string; response: string; format: string; title: string; dropdown: string}>>([]);
     const [messageState, setMessageState] = useState<{
         messages: Message[];
         pending?: string;
@@ -58,7 +72,11 @@ export default function ChatBox(props: PropsType) {
         ],
         history: [],
     });
-    const [isOpenPopup, setOpenPopup] = useState(false);
+    const [ isOpenPopup, setOpenPopup ] = useState(false);
+    const [ dropdownCategory, setDropdown ] = useState("");
+    const [ dropdownValue, setDropdownValue ] = useState("");
+    const [ dropdownTitle, setDropdownTitle ] = useState("");
+    const [ dropdownValueArray, setDropdownValueArray ] = useState<Array<{id: string, name: string}>>([]);
     const { messages, history } = messageState;
     const [additionalComments, setAdditionalComments] = useState("");
 
@@ -67,7 +85,13 @@ export default function ChatBox(props: PropsType) {
     const [ endDate, setEndDate ] = useState(dayjs(new Date()));
     const [ myDataRate, setMyDataRate ] = useState(0);
     const [ myAbilityRate, setMyAbilityRate ] = useState(0);
-    const [ senderEmail, setSenderEmail ] = useState("")
+    const [ senderEmail, setSenderEmail ] = useState("");
+    const [ EndUseArray, setEndUseArray ] = useState<Array<{id: string, name: string}>>([]);
+    const [ EquipmentArray, setEquipmentArray ] = useState<Array<{id: string, name: string}>>([]);
+    const [ EquipmentTypeArray, setEquipmentTypeArray ] = useState<Array<{id: string, name: string}>>([]);
+    const [ savedAPI, setSavedAPI ] = useState("");
+    const [ savedQuestion, setSavedQuestion ] = useState("");
+    const [ savedFormat, setSavedFormat ] = useState("");
 
     const messageListRef = useRef<HTMLDivElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -78,7 +102,7 @@ export default function ChatBox(props: PropsType) {
     });
     backendAPI.defaults.headers.common['Content-Type'] = 'application/json';
     backendAPI.defaults.headers.common['User-Agent'] = 'XY';
-
+    
     useEffect(() => {
         textAreaRef.current?.focus();
     }, []);
@@ -89,7 +113,37 @@ export default function ChatBox(props: PropsType) {
 
     useEffect(() => {
         textAreaRef.current?.focus();
+        if( isOpenPopup ) {
+            getPrePopulatedData();
+        }
     }, [isOpenPopup]);
+
+    useEffect(() => {
+        const title = dropdownCategory === API_DROPDOWN_END_USE
+                    ? "Which end use?"
+                    : dropdownCategory === API_DROPDOWN_EQUIPMENT
+                    ? "Which equipment?"
+                    : dropdownCategory === API_DROPDOWN_EQUIPMENT_TYPE
+                    ? "Which equipment?"
+                    : dropdownCategory === API_DROPDOWN_SPACE_TYPE
+                    ? "Which space type?"
+                    : dropdownCategory === API_DROPDOWN_CIRCUIT
+                    ? "Which circuit?"
+                    : "";
+        setDropdownTitle(title);
+        if( dropdownCategory === API_DROPDOWN_END_USE ) {
+            setDropdownValueArray(EndUseArray);
+        } else if( dropdownCategory === API_DROPDOWN_EQUIPMENT ) {
+            setDropdownValueArray(EquipmentArray);
+        } else if( dropdownCategory === API_DROPDOWN_EQUIPMENT_TYPE ) {
+            setDropdownValueArray(EquipmentTypeArray);
+        } else if( dropdownCategory === API_DROPDOWN_SPACE_TYPE ) {
+            setDropdownValueArray([]);
+        } else if( dropdownCategory === API_DROPDOWN_CIRCUIT ) {
+            setDropdownValueArray([]);
+        }
+    }, [dropdownCategory]);
+
 
     const clearHistory = () => {
         // setQuery("");
@@ -136,9 +190,50 @@ export default function ChatBox(props: PropsType) {
         setOpenPopup(false);
     };
 
-    async function getAPIAnswer(api: string, format: string, title: string) {
-        const question = title.trim();
+    const clearSavedAPIData = () => {
+        setSavedAPI("");
+        setSavedFormat("");
+        setSavedQuestion("");
+        setDropdown("");
+        setDropdownValue("");
+    }
 
+    const getPrePopulatedData = async () => {
+        const equipResponse = await backendAPI.post( "/api/get_equipment_list", {});
+        const equipData = await equipResponse.data;
+        let tempArray: Array<{id: string, name: string}> = [];
+        if( equipData.result != null ) {
+            equipData.result.map((item: any) => {
+                tempArray.push({"id": item.equipment_id, "name": item.equipment_name});
+            });
+            setEquipmentArray(tempArray);
+        }
+
+        const equipTypeResponse = await backendAPI.post( "/api/get_equipment_type", {});
+        const equipTypeData = await equipTypeResponse.data;
+        tempArray = [];
+        if( equipTypeData.result != null ) {
+            equipTypeData.result.map((item: any) => {
+                tempArray.push({"id": item.equipment_id, "name": item.equipment_type});
+            });
+            setEquipmentTypeArray(tempArray);
+        }
+
+        const endUseResponse = await backendAPI.post( "/api/get_end_use", {});
+        const endUseData = await endUseResponse.data;
+        tempArray = [];
+        if( endUseData.result != null ) {
+            endUseData.result.map((item: any) => {
+                tempArray.push({"id": item.end_user_id, "name": item.name});
+            })
+            setEndUseArray(tempArray)
+        }
+    }
+
+    async function getAPIAnswer(api: string, format: string, title: string, dropdown: string) {
+        const question = title.trim();
+        console.log("dropdown category", dropdown);
+        setDropdown(dropdown);
         setMessageState((state) => ({
             ...state,
             messages: [
@@ -147,64 +242,73 @@ export default function ChatBox(props: PropsType) {
                     type: 'userMessage',
                     message: question,
                     data: [],
-                    format: TEXT_FORMAT
+                    format: TEXT_FORMAT,
                 },
             ],
         }));
 
         setAPIArr([]);
 
-        setLoading(true);
-
-        try {
-            const stDate = startDate.get("year") + "-" + (startDate.get("month") + 1) + "-" + startDate.get("date");
-            const enDate = endDate.get("year") + "-" + (endDate.get("month") + 1) + "-" + endDate.get("date");
-
-            const response = await backendAPI.post( "/api/get_api_answer", {
-                question: question,
-                api: api,
-                format: format,
-                stDate: stDate,
-                enDate: enDate
-            });
-            const data = await response.data;
-            console.log('data', data);
-
-            if (data.error) {
-                setError(data.error);
-            } else {
-                console.log('data', data);
-                setMessageState((state) => ({
-                    ...state,
-                    messages: [
-                        ...state.messages,
-                        {
-                            type: 'apiMessage',
-                            message: data.answer,
-                            data: data.ref_data,
-                            format: format
-                        },
-                    ],
-                    history: [...state.history, [question, data.answer]],
-                }));
-
-                props.chatHistory(messageState);
+        if( dropdown.length > 0 ) {
+            setSavedAPI(api);
+            setSavedQuestion(question);
+            setSavedFormat(format);
+        } else {
+            clearSavedAPIData();
+            setLoading(true);
+    
+            try {
+                const stDate = startDate.get("year") + "-" + (startDate.get("month") + 1) + "-" + startDate.get("date");
+                const enDate = endDate.get("year") + "-" + (endDate.get("month") + 1) + "-" + endDate.get("date");
+    
+                const response = await backendAPI.post( "/api/get_api_answer", {
+                    question: question,
+                    api: api,
+                    format: format,
+                    type_id: "",
+                    type_name: "",
+                    stDate: stDate,
+                    enDate: enDate
+                });
+                const data = await response.data;
+    
+                if (data.error) {
+                    setError(data.error);
+                } else {
+                    setMessageState((state) => ({
+                        ...state,
+                        messages: [
+                            ...state.messages,
+                            {
+                                type: 'apiMessage',
+                                message: data.answer,
+                                data: data.ref_data,
+                                format: format,
+                            },
+                        ],
+                        history: [...state.history, [question, data.answer]],
+                    }));
+    
+                    props.chatHistory(messageState);
+                }
+    
+                setLoading(false);
+    
+                //scroll to bottom
+                messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
+            } catch (error) {
+                setLoading(false);
+                setError('An error occurred while fetching the data. Please try again.');
+                console.log('error', error);
             }
-
-            setLoading(false);
-
-            //scroll to bottom
-            messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
-        } catch (error) {
-            setLoading(false);
-            setError('An error occurred while fetching the data. Please try again.');
-            console.log('error', error);
         }
+
     }
 
     //handle form submission
     async function handleSubmit(e: any) {
         e.preventDefault();
+        clearSavedAPIData();
 
         setError(null);
 
@@ -224,7 +328,7 @@ export default function ChatBox(props: PropsType) {
                     type: 'userMessage',
                     message: question,
                     data: [],
-                    format: TEXT_FORMAT
+                    format: TEXT_FORMAT,
                 },
             ],
         }));
@@ -246,7 +350,6 @@ export default function ChatBox(props: PropsType) {
             if (data.error) {
                 setError(data.error);
             } else {
-                console.log('data', data);
                 setMessageState((state) => ({
                     ...state,
                     messages: [
@@ -255,7 +358,7 @@ export default function ChatBox(props: PropsType) {
                             type: 'apiMessage',
                             message: data.answer.answer,
                             data: [],
-                            format: TEXT_FORMAT
+                            format: TEXT_FORMAT,
                         },
                     ],
                     history: [...state.history, [question, data.answer.answer]],
@@ -341,6 +444,72 @@ export default function ChatBox(props: PropsType) {
         setSenderEmail(e.target.value)
     }
 
+    const handleDropdown = async (event: SelectChangeEvent, dropdown_title: string) => {
+        const selectedData = dropdownValueArray[parseInt(event.target.value as string)];
+        setDropdownValue(selectedData.name);
+        setDropdown("");
+        setMessageState((state) => ({
+            ...state,
+            messages: [
+                ...state.messages,
+                {
+                    type: 'apiMessage',
+                    message: dropdown_title,
+                    data: [],
+                    format: TEXT_FORMAT,
+                },
+                {
+                    type: 'userMessage',
+                    message: selectedData.name,
+                    data: [],
+                    format: TEXT_FORMAT,
+                }
+            ],
+        }));
+        setLoading(true);
+        // savedAPI
+        const stDate = startDate.get("year") + "-" + (startDate.get("month") + 1) + "-" + startDate.get("date");
+        const enDate = endDate.get("year") + "-" + (endDate.get("month") + 1) + "-" + endDate.get("date");
+
+        const response = await backendAPI.post( "/api/get_api_answer", {
+            question: savedQuestion,
+            api: savedAPI,
+            format: savedFormat,
+            type_id: selectedData.id,
+            type_name: selectedData.name,
+            stDate: stDate,
+            enDate: enDate
+        });
+        const data = await response.data;
+
+        if (data.error) {
+            setError(data.error);
+        } else {
+            setMessageState((state) => ({
+                ...state,
+                messages: [
+                    ...state.messages,
+                    {
+                        type: 'apiMessage',
+                        message: data.answer,
+                        data: data.ref_data,
+                        format: savedFormat,
+                    },
+                ],
+                history: [...state.history, [savedQuestion, data.answer]],
+            }));
+
+            props.chatHistory(messageState);
+        }
+
+        setLoading(false);
+
+        //scroll to bottom
+        messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
+
+        clearSavedAPIData();
+    };
+
     return (
         <div
             style={{
@@ -387,8 +556,9 @@ export default function ChatBox(props: PropsType) {
                         {messages.map((message, index) => {
                             let icon;
                             let graph;
+                            let dropdown;
                             let className;
-                            if (message.type === 'apiMessage') {
+                            if( message.type === 'apiMessage' ) {
                                 icon = (
                                     <Image
                                         key={index}
@@ -420,70 +590,49 @@ export default function ChatBox(props: PropsType) {
                                         : styles.usermessage;
                             }
 
-                            graph = (
-                                <div>
-
-                                </div>
-                            )
-
-                            // if (message.format == TEXT_PIECHART_FORMAT) {
-                            //     graph = (
-                            //         <div>
-                            //             <PieChart width={400} height={400}>
-                            //                 <Pie
-                            //                     data={message.data}
-                            //                     dataKey="value"
-                            //                     cx="50%"
-                            //                     cy="50%"
-                            //                     outerRadius={60}
-                            //                     fill="#8884d8"
-                            //                     label
-                            //                 >
-                            //                 </Pie>
-                            //             </PieChart>
-                            //         </div>
-                            //     )
-                            // } else if (message.format == TEXT_TABLE_FORMAT) {
-                            //     graph = (
-                            //         <div>
-
-                            //         </div>
-                            //     )
-                            // } else if (message.format == TEXT_BARCHART_FORMAT) {
-                            //     graph = (
-                            //         <div>
-                            //             <BarChart width={600} height={600} data={message.data}>
-                            //                 <Bar dataKey="value" fill='green' />
-                            //                 <CartesianGrid stroke="#ccc" />
-                            //                 <XAxis dataKey="name" />
-                            //                 <YAxis />
-                            //             </BarChart>
-                            //         </div>
-                            //     )
-                            // }
-
                             return (
                                 <>
                                     <div key={`chatMessage-${index}`} className={className}>
-                                        {/* {icon} */}
                                         <div className={styles.markdownanswer}>
                                             <ReactMarkdown linkTarget="_blank">{String(message.message).replaceAll("\n", "\n\n")}</ReactMarkdown>
                                         </div>
                                     </div>
+                                    { dropdown }
                                 </>
                             );
                         })}
 
+                        {dropdownCategory !== "" && (
+                            <div className={styles.apimessage}>
+                                <FormControl sx={{ m: 1, width: "250px" }} variant="standard" fullWidth>
+                                    <InputLabel id="label_category">
+                                    { dropdownTitle }
+                                    </InputLabel>
+                                    <Select
+                                        labelId="label_category"
+                                        id="select_category"
+                                        value={ dropdownValue }
+                                        label={ dropdownTitle }
+                                        onChange={(e) => handleDropdown(e, dropdownTitle)}
+                                        MenuProps={MenuProps}
+                                        autoWidth
+                                    >
+                                        {
+                                            dropdownValueArray.map((value, i) => <MenuItem value={i}>{value.name}</MenuItem>)
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </div>
+                        )}
+
                         {
-                            !loading && apiArr && apiArr.length > 0 && apiArr.map((api_item, index) => {
-                                return (
+                            !loading && apiArr && apiArr.length > 0 && apiArr.map((api_item, index) =>
                                     <>
-                                        <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.format, api_item.title != "" ? `${api_item.title}` : `${api_item.response}`)}>
+                                        <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.format, api_item.title != "" ? `${api_item.title}` : `${api_item.response}`, api_item.dropdown)}>
                                             {api_item.title != "" ? `${api_item.title}` : `${api_item.response}`}
                                         </div>
                                     </>
-                                )
-                            })
+                            )
                         }
                     </div>
 
@@ -650,3 +799,4 @@ export default function ChatBox(props: PropsType) {
         </div>
     );
 }
+

@@ -312,6 +312,10 @@
   background:rgb(204, 204, 204)
 }
 
+.borderlessdropdown {
+  border: none !important;
+}
+
 @keyframes fadein {
   from {
     opacity: 0;
