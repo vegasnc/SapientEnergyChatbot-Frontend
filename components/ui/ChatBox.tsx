@@ -27,11 +27,15 @@ const TEXT_FORMAT = "1";
 const TEXT_TABLE_FORMAT = "2";
 const TEXT_PIECHART_FORMAT = "3";
 const TEXT_BARCHART_FORMAT = "4";
+const STATIC_ANSWER = "1"
+const GENERAL_ANSWER = "2"
+const API_ANSWER = "3"
 const API_DROPDOWN_END_USE = "end_use";
 const API_DROPDOWN_EQUIPMENT  = "equipment";
 const API_DROPDOWN_EQUIPMENT_TYPE = "equipment_type";
 const API_DROPDOWN_SPACE_TYPE = "space_type";
 const API_DROPDOWN_CIRCUIT = "circuit_type";
+const API_DROPDOWN_BUILDING = "building";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -51,6 +55,25 @@ interface PropsType {
     // showToast: (message: string, type: string) => void;
 }
 
+const StartMSG = [
+    "Your energy usage is constantly changing. Would you like to learn more about those trends?",
+
+    "New data has been recorded for your building. What would you like to learn about today?",
+    
+    "It's good to see you again! How can I help you today?",
+    
+    "Hello! I'm your Energy Helper. How can I help you analyze your energy data?",
+    
+    "Welcome to the Energy Metering Solution Chatbot! 📊 Ready to take control of your energy usage and costs? I'm here to guide you through our cutting-edge metering technology and help you make informed decisions. How can I assist you today?",
+    
+    "With data that evolves constantly and new energy trends emerging, we're here to help you stay ahead. How can I assist you today?",
+    
+    "In a world of ever-changing energy data and emerging trends, we're here to keep you informed and in control. How can I assist you today?",
+    
+    "As energy data evolves continuously and new trends emerge, we're here to empower you. How can I help you today?",
+    
+    "In a landscape of ever-changing energy data and emerging trends, we're here to be your resource. How can I facilitate your needs today?"
+]
 
 export default function ChatBox(props: PropsType) {
     const [query, setQuery] = useState<string>('');
@@ -64,7 +87,7 @@ export default function ChatBox(props: PropsType) {
     }>({
         messages: [
             {
-                message: 'Hello, How are you doing today?',
+                message: StartMSG[Math.floor(Math.random() * 9)],
                 type: 'apiMessage',
                 data: [],
                 format: TEXT_FORMAT
@@ -88,10 +111,13 @@ export default function ChatBox(props: PropsType) {
     const [ senderEmail, setSenderEmail ] = useState("");
     const [ EndUseArray, setEndUseArray ] = useState<Array<{id: string, name: string}>>([]);
     const [ EquipmentArray, setEquipmentArray ] = useState<Array<{id: string, name: string}>>([]);
+    const [ BuildingArray, setBuildingArray ] = useState<Array<{id: string, name: string}>>([]);
     const [ EquipmentTypeArray, setEquipmentTypeArray ] = useState<Array<{id: string, name: string}>>([]);
     const [ savedAPI, setSavedAPI ] = useState("");
     const [ savedQuestion, setSavedQuestion ] = useState("");
     const [ savedFormat, setSavedFormat ] = useState("");
+    const [ savedDropdownCategory, setSavedDropdownCategory ] = useState("");
+    const [ buildingInfo, setBuildingInfo ] = useState<{id: string, name: string}>({id: "", name: ""});
 
     const messageListRef = useRef<HTMLDivElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -113,9 +139,8 @@ export default function ChatBox(props: PropsType) {
 
     useEffect(() => {
         textAreaRef.current?.focus();
-        if( isOpenPopup ) {
-            getPrePopulatedData();
-        }
+        if( isOpenPopup == true )
+            getPrePopulatedData()
     }, [isOpenPopup]);
 
     useEffect(() => {
@@ -124,11 +149,13 @@ export default function ChatBox(props: PropsType) {
                     : dropdownCategory === API_DROPDOWN_EQUIPMENT
                     ? "Which equipment?"
                     : dropdownCategory === API_DROPDOWN_EQUIPMENT_TYPE
-                    ? "Which equipment?"
+                    ? "Which equipment type?"
                     : dropdownCategory === API_DROPDOWN_SPACE_TYPE
                     ? "Which space type?"
                     : dropdownCategory === API_DROPDOWN_CIRCUIT
                     ? "Which circuit?"
+                    : dropdownCategory === API_DROPDOWN_BUILDING
+                    ? "Which building?"
                     : "";
         setDropdownTitle(title);
         if( dropdownCategory === API_DROPDOWN_END_USE ) {
@@ -141,6 +168,8 @@ export default function ChatBox(props: PropsType) {
             setDropdownValueArray([]);
         } else if( dropdownCategory === API_DROPDOWN_CIRCUIT ) {
             setDropdownValueArray([]);
+        } else if( dropdownCategory === API_DROPDOWN_BUILDING ) {
+            setDropdownValueArray(BuildingArray);
         }
     }, [dropdownCategory]);
 
@@ -196,34 +225,33 @@ export default function ChatBox(props: PropsType) {
         setSavedQuestion("");
         setDropdown("");
         setDropdownValue("");
+        setBuildingInfo({id: "", name: ""});
     }
 
     const getPrePopulatedData = async () => {
-        const equipResponse = await backendAPI.post( "/api/get_equipment_list", {});
-        const equipData = await equipResponse.data;
+
+        const response = await backendAPI.post( "/api/get_prepopulated_data", {});
+        const populatedData = await response.data;
         let tempArray: Array<{id: string, name: string}> = [];
-        if( equipData.result != null ) {
-            equipData.result.map((item: any) => {
-                tempArray.push({"id": item.equipment_id, "name": item.equipment_name});
-            });
-            setEquipmentArray(tempArray);
+
+        if( populatedData.building_data != null ) {
+            populatedData.building_data.map((item: any) => {
+                tempArray.push({"id": item.building_id, "name": item.building_name})
+            })
+            setBuildingArray(tempArray);
         }
 
-        const equipTypeResponse = await backendAPI.post( "/api/get_equipment_type", {});
-        const equipTypeData = await equipTypeResponse.data;
         tempArray = [];
-        if( equipTypeData.result != null ) {
-            equipTypeData.result.map((item: any) => {
+        if( populatedData.equip_type != null ) {
+            populatedData.equip_type.map((item: any) => {
                 tempArray.push({"id": item.equipment_id, "name": item.equipment_type});
             });
             setEquipmentTypeArray(tempArray);
         }
 
-        const endUseResponse = await backendAPI.post( "/api/get_end_use", {});
-        const endUseData = await endUseResponse.data;
         tempArray = [];
-        if( endUseData.result != null ) {
-            endUseData.result.map((item: any) => {
+        if( populatedData.end_use != null ) {
+            populatedData.end_use.map((item: any) => {
                 tempArray.push({"id": item.end_user_id, "name": item.name});
             })
             setEndUseArray(tempArray)
@@ -233,7 +261,6 @@ export default function ChatBox(props: PropsType) {
     async function getAPIAnswer(api: string, format: string, title: string, dropdown: string) {
         const question = title.trim();
         console.log("dropdown category", dropdown);
-        setDropdown(dropdown);
         setMessageState((state) => ({
             ...state,
             messages: [
@@ -246,14 +273,18 @@ export default function ChatBox(props: PropsType) {
                 },
             ],
         }));
-
+        
         setAPIArr([]);
 
-        if( dropdown.length > 0 ) {
+        if( buildingInfo?.id == "" || buildingInfo?.name == "" ) {
+            setDropdown(API_DROPDOWN_BUILDING);
+            setSavedDropdownCategory(dropdown);
             setSavedAPI(api);
             setSavedQuestion(question);
             setSavedFormat(format);
         } else {
+            setDropdown(dropdown);
+    
             clearSavedAPIData();
             setLoading(true);
     
@@ -268,7 +299,7 @@ export default function ChatBox(props: PropsType) {
                     type_id: "",
                     type_name: "",
                     stDate: stDate,
-                    enDate: enDate
+                    enDate: enDate,
                 });
                 const data = await response.data;
     
@@ -302,6 +333,7 @@ export default function ChatBox(props: PropsType) {
                 console.log('error', error);
             }
         }
+        
 
     }
 
@@ -343,30 +375,54 @@ export default function ChatBox(props: PropsType) {
             const response = await backendAPI.post( "/api/get_answer", {
                 question: question,
                 stDate: stDate,
-                enDate: enDate
+                enDate: enDate,
             });
             const data = await response.data;
 
             if (data.error) {
                 setError(data.error);
             } else {
-                setMessageState((state) => ({
-                    ...state,
-                    messages: [
-                        ...state.messages,
-                        {
-                            type: 'apiMessage',
-                            message: data.answer.answer,
-                            data: [],
-                            format: TEXT_FORMAT,
-                        },
-                    ],
-                    history: [...state.history, [question, data.answer.answer]],
-                }));
-
-                props.chatHistory(messageState);
-
-                setAPIArr(data.answer.api);
+                // if the question is calling the API or functional button directly, answer is empty and call getAPIAnswer directly 
+                if( data.answer.type !== undefined ) {
+                    if( data.answer.type == STATIC_ANSWER || data.answer.type == GENERAL_ANSWER ) {
+                        setMessageState((state) => ({
+                            ...state,
+                            messages: [
+                                ...state.messages,
+                                {
+                                    type: 'apiMessage',
+                                    message: data.answer.answer,
+                                    data: [],
+                                    format: TEXT_FORMAT,
+                                },
+                            ],
+                            history: [...state.history, [question, data.answer.answer]],
+                        }));
+        
+                        props.chatHistory(messageState);
+        
+                        setAPIArr(data.answer.api);
+                    } else if( data.answer.type == API_ANSWER ) {
+                        const api = data.answer.api
+                        const dropdown = data.answer.dropdown
+                        const question = data.answer.question
+                        getAPIAnswer(api, "0", question, dropdown)
+                    }
+                } else {
+                    setMessageState((state) => ({
+                        ...state,
+                        messages: [
+                            ...state.messages,
+                            {
+                                type: 'apiMessage',
+                                message: data.answer.answer,
+                                data: [],
+                                format: TEXT_FORMAT,
+                            },
+                        ],
+                        history: [...state.history, [question, data.answer.answer]],
+                    }));
+                }
 
             }
             console.log('messageState', messageState);
@@ -446,27 +502,62 @@ export default function ChatBox(props: PropsType) {
 
     const handleDropdown = async (event: SelectChangeEvent, dropdown_title: string) => {
         const selectedData = dropdownValueArray[parseInt(event.target.value as string)];
-        setDropdownValue(selectedData.name);
+        let building_id = "", building_name = "";
+        // if it is building information selection dropdown, re-display dropdown
+        if( buildingInfo?.id == "" || buildingInfo?.name == "") {
+            setBuildingInfo({"id" : selectedData.id, "name" : selectedData.name});
+            building_id = selectedData.id;
+            building_name = selectedData.name;
+            setDropdownValue(selectedData.name);
+            setMessageState((state) => ({
+                ...state,
+                messages: [
+                    ...state.messages,
+                    {
+                        type: 'apiMessage',
+                        message: dropdown_title,
+                        data: [],
+                        format: TEXT_FORMAT,
+                    },
+                    {
+                        type: 'userMessage',
+                        message: selectedData.name,
+                        data: [],
+                        format: TEXT_FORMAT,
+                    }
+                ],
+            }));
+
+            if( savedDropdownCategory != "" ) {
+                setDropdown(savedDropdownCategory);
+                return ;
+            }
+        } else {
+            building_id = buildingInfo?.id;
+            building_name = buildingInfo?.name;
+            setDropdownValue(selectedData.name);
+            setMessageState((state) => ({
+                ...state,
+                messages: [
+                    ...state.messages,
+                    {
+                        type: 'apiMessage',
+                        message: dropdown_title,
+                        data: [],
+                        format: TEXT_FORMAT,
+                    },
+                    {
+                        type: 'userMessage',
+                        message: selectedData.name,
+                        data: [],
+                        format: TEXT_FORMAT,
+                    }
+                ],
+            }));
+        }
         setDropdown("");
-        setMessageState((state) => ({
-            ...state,
-            messages: [
-                ...state.messages,
-                {
-                    type: 'apiMessage',
-                    message: dropdown_title,
-                    data: [],
-                    format: TEXT_FORMAT,
-                },
-                {
-                    type: 'userMessage',
-                    message: selectedData.name,
-                    data: [],
-                    format: TEXT_FORMAT,
-                }
-            ],
-        }));
         setLoading(true);
+        
         // savedAPI
         const stDate = startDate.get("year") + "-" + (startDate.get("month") + 1) + "-" + startDate.get("date");
         const enDate = endDate.get("year") + "-" + (endDate.get("month") + 1) + "-" + endDate.get("date");
@@ -475,10 +566,12 @@ export default function ChatBox(props: PropsType) {
             question: savedQuestion,
             api: savedAPI,
             format: savedFormat,
+            building_id: building_id,
+            building_name: building_name,
             type_id: selectedData.id,
             type_name: selectedData.name,
             stDate: stDate,
-            enDate: enDate
+            enDate: enDate,
         });
         const data = await response.data;
 
