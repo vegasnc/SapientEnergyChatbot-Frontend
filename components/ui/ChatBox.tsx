@@ -258,21 +258,21 @@ export default function ChatBox(props: PropsType) {
         }
     }
 
-    async function getAPIAnswer(api: string, format: string, title: string, dropdown: string) {
+    async function getAPIAnswer(api: string, format: string, title: string, dropdown: string, type: string) {
         const question = title.trim();
-        console.log("dropdown category", dropdown);
-        setMessageState((state) => ({
-            ...state,
-            messages: [
-                ...state.messages,
-                {
-                    type: 'userMessage',
-                    message: question,
-                    data: [],
-                    format: TEXT_FORMAT,
-                },
-            ],
-        }));
+        if( type != API_ANSWER )
+            setMessageState((state) => ({
+                ...state,
+                messages: [
+                    ...state.messages,
+                    {
+                        type: 'userMessage',
+                        message: question,
+                        data: [],
+                        format: TEXT_FORMAT,
+                    },
+                ],
+            }));
         
         setAPIArr([]);
 
@@ -282,6 +282,7 @@ export default function ChatBox(props: PropsType) {
             setSavedAPI(api);
             setSavedQuestion(question);
             setSavedFormat(format);
+            messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
         } else {
             setDropdown(dropdown);
     
@@ -406,7 +407,7 @@ export default function ChatBox(props: PropsType) {
                         const api = data.answer.api
                         const dropdown = data.answer.dropdown
                         const question = data.answer.question
-                        getAPIAnswer(api, "0", question, dropdown)
+                        getAPIAnswer(api, "0", question, dropdown, API_ANSWER)
                     }
                 } else {
                     setMessageState((state) => ({
@@ -687,7 +688,7 @@ export default function ChatBox(props: PropsType) {
                                 <>
                                     <div key={`chatMessage-${index}`} className={className}>
                                         <div className={styles.markdownanswer}>
-                                            <ReactMarkdown linkTarget="_blank">{String(message.message).replaceAll("\n", "\n\n")}</ReactMarkdown>
+                                            <div dangerouslySetInnerHTML={{ __html: message.message }} />
                                         </div>
                                     </div>
                                     { dropdown }
@@ -721,7 +722,7 @@ export default function ChatBox(props: PropsType) {
                         {
                             !loading && apiArr && apiArr.length > 0 && apiArr.map((api_item, index) =>
                                     <>
-                                        <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.format, api_item.title != "" ? `${api_item.title}` : `${api_item.response}`, api_item.dropdown)}>
+                                        <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.format, api_item.title != "" ? `${api_item.title}` : `${api_item.response}`, api_item.dropdown, GENERAL_ANSWER)}>
                                             {api_item.title != "" ? `${api_item.title}` : `${api_item.response}`}
                                         </div>
                                     </>
