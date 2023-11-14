@@ -577,20 +577,21 @@ export default function ChatBox(props: PropsType) {
         const stDate = startDate.get("year") + "-" + (startDate.get("month") + 1) + "-" + startDate.get("date");
         const enDate = endDate.get("year") + "-" + (endDate.get("month") + 1) + "-" + endDate.get("date");
 
-        const response = await backendAPI.post( "/api/get_api_answer", {
-            question: savedQuestion,
-            api: savedAPI,
-            format: savedFormat,
-            building_id: building_id,
-            building_name: building_name,
-            type_id: selectedData.id,
-            type_name: selectedData.name,
-            stDate: stDate,
-            enDate: enDate,
-        });
-        const data = await response.data;
-
+        
         try {
+            const response = await backendAPI.post( "/api/get_api_answer", {
+                question: savedQuestion,
+                api: savedAPI,
+                format: savedFormat,
+                building_id: building_id,
+                building_name: building_name,
+                type_id: selectedData.id,
+                type_name: selectedData.name,
+                stDate: stDate,
+                enDate: enDate,
+            });
+            const data = await response.data;
+
             if (data.error || response.status != 200) {
                 setTroubleshootMessage(savedQuestion);
             } else {
