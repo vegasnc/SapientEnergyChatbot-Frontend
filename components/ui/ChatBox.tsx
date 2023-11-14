@@ -123,8 +123,8 @@ export default function ChatBox(props: PropsType) {
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
     const backendAPI = axios.create({
-        baseURL: "https://sback.kneeshaw-developments.com"
-        // baseURL : "http://localhost:5000"
+        // baseURL: "https://sback.kneeshaw-developments.com"
+        baseURL : "http://localhost:5000"
     });
     backendAPI.defaults.headers.common['Content-Type'] = 'application/json';
     backendAPI.defaults.headers.common['User-Agent'] = 'XY';
@@ -304,8 +304,8 @@ export default function ChatBox(props: PropsType) {
                 });
                 const data = await response.data;
     
-                if (data.error) {
-                    setError(data.error);
+                if (data.error || response.status != 200) {
+                    setTroubleshootMessage(question);
                 } else {
                     setMessageState((state) => ({
                         ...state,
@@ -330,12 +330,26 @@ export default function ChatBox(props: PropsType) {
                 messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
             } catch (error) {
                 setLoading(false);
-                setError('An error occurred while fetching the data. Please try again.');
+                setTroubleshootMessage(question);
                 console.log('error', error);
             }
         }
-        
+    }
 
+    const setTroubleshootMessage = (question: string) => {
+        setMessageState((state) => ({
+            ...state,
+            messages: [
+                ...state.messages,
+                {
+                    type: 'apiMessage',
+                    message: "I'm having trouble connecting with your energy data, Please try again later.",
+                    data: [],
+                    format: TEXT_FORMAT,
+                },
+            ],
+            history: [...state.history, [question, "I'm having trouble connecting with your energy data, Please try again later."]],
+        }));
     }
 
     //handle form submission
@@ -380,8 +394,8 @@ export default function ChatBox(props: PropsType) {
             });
             const data = await response.data;
 
-            if (data.error) {
-                setError(data.error);
+            if (data.error || response.status != 200) {
+                setTroubleshootMessage(question);
             } else {
                 // if the question is calling the API or functional button directly, answer is empty and call getAPIAnswer directly 
                 if( data.answer.type !== undefined ) {
@@ -434,7 +448,7 @@ export default function ChatBox(props: PropsType) {
             messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
         } catch (error) {
             setLoading(false);
-            setError('An error occurred while fetching the data. Please try again.');
+            setTroubleshootMessage(question);
             console.log('error', error);
         }
     }
@@ -576,32 +590,38 @@ export default function ChatBox(props: PropsType) {
         });
         const data = await response.data;
 
-        if (data.error) {
-            setError(data.error);
-        } else {
-            setMessageState((state) => ({
-                ...state,
-                messages: [
-                    ...state.messages,
-                    {
-                        type: 'apiMessage',
-                        message: data.answer,
-                        data: data.ref_data,
-                        format: savedFormat,
-                    },
-                ],
-                history: [...state.history, [savedQuestion, data.answer]],
-            }));
-
-            props.chatHistory(messageState);
+        try {
+            if (data.error || response.status != 200) {
+                setTroubleshootMessage(savedQuestion);
+            } else {
+                setMessageState((state) => ({
+                    ...state,
+                    messages: [
+                        ...state.messages,
+                        {
+                            type: 'apiMessage',
+                            message: data.answer,
+                            data: data.ref_data,
+                            format: savedFormat,
+                        },
+                    ],
+                    history: [...state.history, [savedQuestion, data.answer]],
+                }));
+    
+                props.chatHistory(messageState);
+            }
+    
+            setLoading(false);
+    
+            //scroll to bottom
+            messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
+    
+            clearSavedAPIData();
+        } catch (error) {
+            setLoading(false);
+            setTroubleshootMessage(savedQuestion);
+            console.log('error', error);
         }
-
-        setLoading(false);
-
-        //scroll to bottom
-        messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
-
-        clearSavedAPIData();
     };
 
     return (
