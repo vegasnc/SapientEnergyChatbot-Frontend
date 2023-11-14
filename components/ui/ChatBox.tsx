@@ -337,6 +337,7 @@ export default function ChatBox(props: PropsType) {
     }
 
     const setTroubleshootMessage = (question: string) => {
+        clearSavedAPIData();
         setMessageState((state) => ({
             ...state,
             messages: [
