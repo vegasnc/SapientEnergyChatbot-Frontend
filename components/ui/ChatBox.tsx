@@ -27,6 +27,9 @@ const TEXT_FORMAT = "1";
 const TEXT_TABLE_FORMAT = "2";
 const TEXT_PIECHART_FORMAT = "3";
 const TEXT_BARCHART_FORMAT = "4";
+const STATIC_ANSWER = "1"
+const GENERAL_ANSWER = "2"
+const API_ANSWER = "3"
 const API_DROPDOWN_END_USE = "end_use";
 const API_DROPDOWN_EQUIPMENT  = "equipment";
 const API_DROPDOWN_EQUIPMENT_TYPE = "equipment_type";
@@ -114,7 +117,7 @@ export default function ChatBox(props: PropsType) {
     const [ savedQuestion, setSavedQuestion ] = useState("");
     const [ savedFormat, setSavedFormat ] = useState("");
     const [ savedDropdownCategory, setSavedDropdownCategory ] = useState("");
-    const [ buildingInfo, setBuildingInfo ] = useState<{id: string, name: string}>();
+    const [ buildingInfo, setBuildingInfo ] = useState<{id: string, name: string}>({id: "", name: ""});
 
     const messageListRef = useRef<HTMLDivElement>(null);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -255,30 +258,31 @@ export default function ChatBox(props: PropsType) {
         }
     }
 
-    async function getAPIAnswer(api: string, format: string, title: string, dropdown: string) {
+    async function getAPIAnswer(api: string, format: string, title: string, dropdown: string, type: string) {
         const question = title.trim();
-        console.log("dropdown category", dropdown);
-        setMessageState((state) => ({
-            ...state,
-            messages: [
-                ...state.messages,
-                {
-                    type: 'userMessage',
-                    message: question,
-                    data: [],
-                    format: TEXT_FORMAT,
-                },
-            ],
-        }));
+        if( type != API_ANSWER )
+            setMessageState((state) => ({
+                ...state,
+                messages: [
+                    ...state.messages,
+                    {
+                        type: 'userMessage',
+                        message: question,
+                        data: [],
+                        format: TEXT_FORMAT,
+                    },
+                ],
+            }));
         
         setAPIArr([]);
 
         if( buildingInfo?.id == "" || buildingInfo?.name == "" ) {
-            setDropdown(API_DROPDOWN_BUILDING)
-            setSavedDropdownCategory(dropdown)
+            setDropdown(API_DROPDOWN_BUILDING);
+            setSavedDropdownCategory(dropdown);
             setSavedAPI(api);
             setSavedQuestion(question);
             setSavedFormat(format);
+            messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
         } else {
             setDropdown(dropdown);
     
@@ -300,8 +304,8 @@ export default function ChatBox(props: PropsType) {
                 });
                 const data = await response.data;
     
-                if (data.error) {
-                    setError(data.error);
+                if (data.error || response.status != 200) {
+                    setTroubleshootMessage(question);
                 } else {
                     setMessageState((state) => ({
                         ...state,
@@ -326,11 +330,10 @@ export default function ChatBox(props: PropsType) {
                 messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
             } catch (error) {
                 setLoading(false);
-                setError('An error occurred while fetching the data. Please try again.');
+                setTroubleshootMessage(question);
                 console.log('error', error);
             }
         }
-        
 
     }
 
@@ -376,26 +379,50 @@ export default function ChatBox(props: PropsType) {
             });
             const data = await response.data;
 
-            if (data.error) {
-                setError(data.error);
+            if (data.error || response.status != 200) {
+                setTroubleshootMessage(question);
             } else {
-                setMessageState((state) => ({
-                    ...state,
-                    messages: [
-                        ...state.messages,
-                        {
-                            type: 'apiMessage',
-                            message: data.answer.answer,
-                            data: [],
-                            format: TEXT_FORMAT,
-                        },
-                    ],
-                    history: [...state.history, [question, data.answer.answer]],
-                }));
-
-                props.chatHistory(messageState);
-
-                setAPIArr(data.answer.api);
+                // if the question is calling the API or functional button directly, answer is empty and call getAPIAnswer directly 
+                if( data.answer.type !== undefined ) {
+                    if( data.answer.type == STATIC_ANSWER || data.answer.type == GENERAL_ANSWER ) {
+                        setMessageState((state) => ({
+                            ...state,
+                            messages: [
+                                ...state.messages,
+                                {
+                                    type: 'apiMessage',
+                                    message: data.answer.answer,
+                                    data: [],
+                                    format: TEXT_FORMAT,
+                                },
+                            ],
+                            history: [...state.history, [question, data.answer.answer]],
+                        }));
+        
+                        props.chatHistory(messageState);
+        
+                        setAPIArr(data.answer.api);
+                    } else if( data.answer.type == API_ANSWER ) {
+                        const api = data.answer.api
+                        const dropdown = data.answer.dropdown
+                        const question = data.answer.question
+                        getAPIAnswer(api, "0", question, dropdown, API_ANSWER)
+                    }
+                } else {
+                    setMessageState((state) => ({
+                        ...state,
+                        messages: [
+                            ...state.messages,
+                            {
+                                type: 'apiMessage',
+                                message: data.answer.answer,
+                                data: [],
+                                format: TEXT_FORMAT,
+                            },
+                        ],
+                        history: [...state.history, [question, data.answer.answer]],
+                    }));
+                }
 
             }
             console.log('messageState', messageState);
@@ -406,7 +433,7 @@ export default function ChatBox(props: PropsType) {
             messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
         } catch (error) {
             setLoading(false);
-            setError('An error occurred while fetching the data. Please try again.');
+            setTroubleshootMessage(question);
             console.log('error', error);
         }
     }
@@ -540,32 +567,37 @@ export default function ChatBox(props: PropsType) {
         });
         const data = await response.data;
 
-        if (data.error) {
-            setError(data.error);
-        } else {
-            setMessageState((state) => ({
-                ...state,
-                messages: [
-                    ...state.messages,
-                    {
-                        type: 'apiMessage',
-                        message: data.answer,
-                        data: data.ref_data,
-                        format: savedFormat,
-                    },
-                ],
-                history: [...state.history, [savedQuestion, data.answer]],
-            }));
-
-            props.chatHistory(messageState);
+            if (data.error || response.status != 200) {
+                setTroubleshootMessage(savedQuestion);
+            } else {
+                setMessageState((state) => ({
+                    ...state,
+                    messages: [
+                        ...state.messages,
+                        {
+                            type: 'apiMessage',
+                            message: data.answer,
+                            data: data.ref_data,
+                            format: savedFormat,
+                        },
+                    ],
+                    history: [...state.history, [savedQuestion, data.answer]],
+                }));
+    
+                props.chatHistory(messageState);
+            }
+    
+            setLoading(false);
+    
+            //scroll to bottom
+            messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
+    
+            clearSavedAPIData();
+        } catch (error) {
+            setLoading(false);
+            setTroubleshootMessage(savedQuestion);
+            console.log('error', error);
         }
-
-        setLoading(false);
-
-        //scroll to bottom
-        messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight, behavior: 'smooth' });
-
-        clearSavedAPIData();
     };
 
     return (
@@ -652,7 +684,7 @@ export default function ChatBox(props: PropsType) {
                                 <>
                                     <div key={`chatMessage-${index}`} className={className}>
                                         <div className={styles.markdownanswer}>
-                                            <ReactMarkdown linkTarget="_blank">{String(message.message).replaceAll("\n", "\n\n")}</ReactMarkdown>
+                                            <div dangerouslySetInnerHTML={{ __html: message.message }} />
                                         </div>
                                     </div>
                                     { dropdown }
@@ -686,7 +718,7 @@ export default function ChatBox(props: PropsType) {
                         {
                             !loading && apiArr && apiArr.length > 0 && apiArr.map((api_item, index) =>
                                     <>
-                                        <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.format, api_item.title != "" ? `${api_item.title}` : `${api_item.response}`, api_item.dropdown)}>
+                                        <div className={styles.apibutton} onClick={() => getAPIAnswer(api_item.api, api_item.format, api_item.title != "" ? `${api_item.title}` : `${api_item.response}`, api_item.dropdown, GENERAL_ANSWER)}>
                                             {api_item.title != "" ? `${api_item.title}` : `${api_item.response}`}
                                         </div>
                                     </>
